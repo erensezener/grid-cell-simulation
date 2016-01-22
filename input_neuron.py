@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 side_length = 125 # cm
 
@@ -44,10 +45,25 @@ def test():
 
 def visualize():
     grid = create_grid()
-    plt.scatter(grid[:,0], grid[:,1])
+    plt.figure(figsize=(10, 10))
+    plt.scatter(grid[:,0], grid[:,1], marker='.')
+
+    radius = np.sqrt(50.)    
     
+    for i in range(grid.shape[0]):
+        circle = plt.Circle((grid[i, 0], grid[i, 1], radius), fill=False, color='b')
+        plt.gcf().gca().add_artist(circle)
+
+    limit = 70.
+    axes = plt.gca()
+    axes.set_xlim([-limit, limit])
+    axes.set_ylim([-limit, limit])
+    
+    axes.add_patch(patches.Rectangle((-62.5,-62.5), 125, 125, fill=False, color='r'))
 
 visualize()
+plt.figure()
+test()
 
 
 
