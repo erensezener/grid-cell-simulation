@@ -21,6 +21,9 @@ class Perceptron:
         self.b_g = 0.1
         self.eta = 0.05
         self.epsilon = 0.005
+        self.tau_plus = .1 # seconds
+        self.tau_minus = .3 # seconds
+        self.delta_t = 1e-3 #seconds
 
     def update_mu(self, a):
         self.mu += self.b_mu * (a - self.a_0)
@@ -30,7 +33,8 @@ class Perceptron:
 
     def update_r_plus(self, r):
         h = self.compute_h(r)
-        #TODO to be cont. (Claus' part)
+        self.r_plus = self.r_plus + (1 / self.tau_plus) * (h - self.r_plus - self.r_minus) * self.delta_t
+        self.r_minus = self.r_minus + (1 / self.tau_minus) * (h - self.r_minus) * self.delta_t
 
     def compute_h(self, r):
         if len(np.shape(r)) is not 1:
