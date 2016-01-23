@@ -23,7 +23,8 @@ r_0 = np.random.uniform(.1,.9,size=2) # r_0 = [r_plus_0, r_minus_0]
 
 def adaptation(times):
     # assuming equidistant time points
-    refinement_factor = 10.
+    refinement_factor = 10
+    times = times * 1000 # moving from milliseconds to seconds
     fine_times = np.linspace(times[0], times[-1], refinement_factor * (len(times)-1) + len(times))
     r = odeint(f, r_0, fine_times) # r = [r_plus, r_minus]
-    return r[::refinement_factor + 1]
+    return r[::refinement_factor + 1] #subsampling
