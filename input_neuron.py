@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 side_length = 125 # cm
 
@@ -17,6 +18,7 @@ def create_grid(side_length=side_length):
     return input_neurons
 
 def input_rates(time_positions):
+    print 'calculating input rates...'
     input_neurons = create_grid()
     
     num_positions = time_positions.shape[0]
@@ -39,15 +41,39 @@ def test():
     z = np.zeros((1000,1))
     time_positions = np.concatenate([x,y,z], axis=1)
     rates = input_rates(time_positions)
-    plt.pcolor(rates[780,:].reshape(20,20))
+    sum_rates = rates.sum(axis=0)
+    plt.pcolor(sum_rates.reshape(20,20))
     plt.colorbar()
 
-def visualize():
+def visualize_grid():
     grid = create_grid()
-    plt.scatter(grid[:,0], grid[:,1])
-    
+    plt.figure(figsize=(10, 10))
+    plt.scatter(grid[:,0], grid[:,1], marker='.')
 
-visualize()
+    radius = np.sqrt(50.)    
+    
+    for i in range(grid.shape[0]):
+        circle = plt.Circle((grid[i, 0], grid[i, 1], radius), fill=False, color='b')
+        plt.gcf().gca().add_artist(circle)
+
+    limit = 70.
+    axes = plt.gca()
+    axes.set_xlim([-limit, limit])
+    axes.set_ylim([-limit, limit])
+    
+    axes.add_patch(patches.Rectangle((-62.5,-62.5), 125, 125, fill=False, color='r'))
+
+def visualize_activity(positions, rates):
+    plt.figure()
+    plt.plot(positions[:,0],positions[:,1])
+    plt.xlim(-65,65)
+    plt.ylim(-65,65)
+    
+    plt.figure()
+    sum_rates = rates.sum(axis=0)
+    
+    plt.pcolor(sum_rates.reshape(20,20))
+    plt.colorbar()
 
 
 
