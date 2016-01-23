@@ -1,9 +1,5 @@
+# -*- coding: utf-8 -*-
 
-# coding: utf-8
-
-# In[30]:
-
-get_ipython().magic(u'matplotlib inline')
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -18,7 +14,7 @@ def running_rat(t_max, timestep=10.0, velocity=40, x_lim=62.5, y_lim=62.5): #len
     r=velocity*0.01
     t=0
     output= np.zeros((int(t_max/timestep), 3))
-    turn=[-np.pi*0.5, np.pi*0.5]
+    #turn=[-np.pi*0.5, np.pi*0.5]
     
     x=62.5-125*(np.random.random_sample())
     y=62.5-125*(np.random.random_sample())
@@ -61,18 +57,6 @@ def rat_txt_to_matrix(filename):
         outputmatrix= np.vstack((outputmatrix,v))
     return outputmatrix
 
-rat=running_rat(4000000)
-plot_rat_trajectory(rat)
-rat2txt(rat)
-#print rat_txt_to_matrix("Rat_Data.txt")
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
-
-
+#rat=running_rat(4000000)
+#plot_rat_trajectory(rat)
+#rat2txt(rat)
