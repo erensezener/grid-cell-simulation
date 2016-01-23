@@ -27,7 +27,7 @@ class OutputLayer:
 
     def update_a_and_s(self):
         a, s = 0, 0  # temp values
-        for i in range(100):
+        for i in range(self.size):
             a = self.compute_a()
             s = self.compute_s()
             self.update_mu_g(s, a)
@@ -58,5 +58,6 @@ class OutputLayer:
     def update_rs(self, r):
         map(lambda o: o.update_r_plus(r), self.output_layer)
 
+    # normalization (i.e., fixed L2 norm) is done in Perceptron.update()
     def update_weights(self, r):
         map(lambda o: o.update(r), self.output_layer)

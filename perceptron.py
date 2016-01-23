@@ -6,9 +6,10 @@ class Perceptron:
     def __init__(self, a_0, s_0):
         self.activation_fun = lambda g, mu, r_plus: 2 / np.pi * np.arctan(g * (r_plus - mu)) \
                                                     * (1 if r_plus - mu > 0 else 0)
-        self.weights = np.random.uniform(0, 1, 400)
+        self.input_size = 400
+        self.weights = np.random.uniform(0, 1, self.input_size)
         self.normalize_weights()
-        self.avg_input_rates = np.zeros((1,400))
+        self.avg_input_rates = np.zeros((1, self.input_size))
         self.avg_firing_rate = 0
         self.r_plus = 1  # TODO initial value?
         self.r_minus = 1  # TODO initial value?
@@ -18,7 +19,6 @@ class Perceptron:
         self.s_0 = s_0
         self.b_mu = 0.01
         self.b_g = 0.1
-
         self.eta = 0.05
         self.epsilon = 0.005
 
@@ -30,7 +30,7 @@ class Perceptron:
 
     def update_r_plus(self, r):
         h = self.compute_h(r)
-        #TODO to be cont.
+        #TODO to be cont. (Claus' part)
 
     def compute_h(self, r):
         if len(np.shape(r)) is not 1:
@@ -45,7 +45,7 @@ class Perceptron:
     def update(self, r):
         o = self.compute_output()
         self.avg_firing_rate += self.eta * (o - self.avg_firing_rate)
-        for i in range(400):
+        for i in range(self.input_size):
             self.avg_input_rates[:,i] += self.eta * (r[i] - self.avg_input_rates[:,i])
             self.weights[i] += self.epsilon * (o * r[i] - self.avg_firing_rate * self.avg_input_rates[:,i])
 
@@ -53,8 +53,8 @@ class Perceptron:
 
     def normalize_weights(self):
         normalized_weights = pre.normalize(self.weights, norm='l2', copy='true')
-        assert 0.999 < np.sum([w ** 2 for w in normalized_weights.reshape((400,))]) < 1.001  # sanity check
-        self.weights = normalized_weights.reshape((400,))
+        assert 0.999 < np.sum([w ** 2 for w in normalized_weights.reshape((self.input_size,))]) < 1.001  # sanity check
+        self.weights = normalized_weights.reshape((self.input_size,))
 
     def get_weights(self):
         return self.weights
