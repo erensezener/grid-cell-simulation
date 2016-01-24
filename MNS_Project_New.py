@@ -3,10 +3,10 @@
 
 # In[30]:
 
-get_ipython().magic(u'matplotlib inline')
 import numpy as np
 import matplotlib.pyplot as plt
 
+NUMBER_OF_ITERS = 4e4
 
 def compute_new_position(x,y,phi,r):
     x_new=x+(r*np.cos(phi))
@@ -61,18 +61,12 @@ def rat_txt_to_matrix(filename):
         outputmatrix= np.vstack((outputmatrix,v))
     return outputmatrix
 
-rat=running_rat(4000000)
-plot_rat_trajectory(rat)
-rat2txt(rat)
-#print rat_txt_to_matrix("Rat_Data.txt")
+def main():
+    rat=running_rat(NUMBER_OF_ITERS)
+    plot_rat_trajectory(rat)
+    rat2txt(rat)
 
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
+if __name__ == '__main__':
+    main()
 
 

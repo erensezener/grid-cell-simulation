@@ -16,6 +16,7 @@ class OutputLayer:
 
     def process_all_inputs(self):
         for i in range(np.size(self.input_layer_inputs, 0)):
+            print 'iteration: ' + str(i)
             self.update_weights(self.input_layer_inputs[i, :])
             self.update_a_and_s()
             self.update_rs(self.input_layer_inputs[i, :])
@@ -27,7 +28,7 @@ class OutputLayer:
 
     def update_a_and_s(self):
         a, s = 0, 0  # temp values
-        for i in range(self.size):
+        for i in range(10):
             a = self.compute_a()
             s = self.compute_s()
             self.update_mu_g(s, a)
