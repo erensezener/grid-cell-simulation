@@ -40,8 +40,7 @@ class FastOutputLayer:
 
     # computes outputs for each time step from input layer outputs
     def process_all_inputs(self):
-        for i in range(np.size(self.input_layer_inputs, 0)):
-            # print 'iteration: ' + str(i)
+        for i in range(np.size(self.input_layer_inputs, 0)): #for each time step
             input = self.input_layer_inputs[i, :]
             h = np.dot(self.weights, input)  # results in size: (100,)
             self.r_plus = self.r_plus + (1 / self.tau_plus) * (h - self.r_plus - self.r_minus) * self.delta_t
@@ -57,8 +56,9 @@ class FastOutputLayer:
                 # if np.any(np.isnan(output)):
                 #     print 'nanalert for output'
                 a = np.mean(output)
-                # s = np.power(a,2) / np.sum(np.power(output,2)) * self.size #same with below but faster
-                s = (np.sum(output) ** 2) / np.sum(np.power(output, 2)) / self.size
+                s = np.power(a,2) / np.sum(np.power(output,2)) * self.size #same with below but faster
+                s2 = (np.sum(output) ** 2) / np.sum(np.power(output, 2)) / self.size
+                assert -0.001 < s - s2 <0.001
                 if self.debug_mode:
                     all_a.append(a)
                     all_s.append(s)
@@ -69,10 +69,10 @@ class FastOutputLayer:
                     break
 
                 self.mu += self.b_mu * (a - self.a_0)
-                g = self.g + self.b_g * self.g * (s - self.s_0)
+                self.g = self.g + self.b_g * self.g * (s - self.s_0)
                 # if np.isnan(g):
                 #     print 'nanalert for g'
-                self.g = g
+                # self.g = g
 
             if self.debug_mode:
                 plt.plot(all_a, label='a')
