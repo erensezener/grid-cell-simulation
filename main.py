@@ -1,23 +1,26 @@
-import output_layer
+import fast_output_layer
 import input_neuron
-import numpy as np
 import MNS_Project_New
 import matplotlib.pyplot as plt
+import datetime
 
 FILENAME = 'Rat_Data.txt'
 
 print 'reading data'
 rat_data = MNS_Project_New.rat_txt_to_matrix(FILENAME)
 print 'data read'
-rat_data = rat_data[1:10,:]
+rat_data = rat_data[1:100,:]
 input_layer_outputs = input_neuron.input_rates(rat_data)
 print 'input processed'
-output_layer_outputs = output_layer.OutputLayer(input_layer_outputs)
+a = datetime.datetime.now().replace(microsecond=0)
+output_layer_outputs = fast_output_layer.FastOutputLayer(input_layer_outputs)
 output_layer_outputs.process_all_inputs()
-print 'output processed'
+b = datetime.datetime.now().replace(microsecond=0)
+print 'output processed in ' + str(b-a)
 
 print output_layer_outputs.output_layer_outputs
 plt.plot(output_layer_outputs.output_layer_outputs)
-plt.bar(output_layer_outputs.output_layer_outputs[8])
+plt.show()
+# plt.bar(output_layer_outputs.output_layer_outputs[8])
 # print output_layer_outputs.output_layer_outputs[9]
 # print sum(o.get_weights(1))

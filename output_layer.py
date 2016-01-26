@@ -13,7 +13,11 @@ class OutputLayer:
                              for i in range(self.size)]
         self.input_layer_inputs = input_layer_inputs  # np matrix n by 400
         self.output_layer_outputs = np.zeros((np.size(input_layer_inputs, 0), self.size))
+        self.recent_outputs = []
+        self.recent_outputs_computed = False
+        self.max_optim_iters = 10
 
+    # computes outputs for each time step from input layer outputs
     def process_all_inputs(self):
         for i in range(np.size(self.input_layer_inputs, 0)):
             print 'iteration: ' + str(i)
@@ -23,12 +27,18 @@ class OutputLayer:
             outputs = self.compute_outputs()
             self.output_layer_outputs[i, :] = np.reshape(outputs, (1, self.size))
 
+    # computes outputs (caches the most recent output)
     def compute_outputs(self):
-        return [p.compute_output() for p in self.output_layer]
+        if not self.recent_outputs_computed:
+            self.recent_outputs = [p.compute_output() for p in self.output_layer]
+            self.recent_outputs_computed = True
+        assert len(self.recent_outputs) is not 0
+        return self.recent_outputs
+
 
     def update_a_and_s(self):
         a, s = 0, 0  # temp values
-        for i in range(10):
+        for i in range(self.max_optim_iters):
             a = self.compute_a()
             s = self.compute_s()
             self.update_mu_g(s, a)
@@ -38,20 +48,22 @@ class OutputLayer:
                 self.s = s
                 break
 
-        # if 100 iters is not enough
+        # if self.max_optim_iters many iters is not enough
         self.a = a
         self.s = s
 
     def update_mu_g(self, a, s):
         map(lambda n: n.update_mu(a), self.output_layer)
         map(lambda n: n.update_g(s), self.output_layer)
+        self.recent_outputs_computed = False
+
 
     def compute_a(self):
         return sum(self.compute_outputs()) / self.size
 
     def compute_s(self):
         return sum(self.compute_outputs()) ** 2 / \
-               (self.size * sum([o.compute_output() ** 2 for o in self.output_layer]))
+               (self.size * sum(map(lambda x: x**2, self.compute_outputs())))
 
     def get_weights(self, i):
         return self.output_layer[i].get_weights()
@@ -62,3 +74,4 @@ class OutputLayer:
     # normalization (i.e., fixed L2 norm) is done in Perceptron.update()
     def update_weights(self, r):
         map(lambda o: o.update(r), self.output_layer)
+        self.recent_outputs_computed = False
