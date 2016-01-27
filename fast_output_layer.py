@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 
 class FastOutputLayer:
     def __init__(self, input_layer_inputs):
+        self.debug_mode = True
+
         # layer metaparameters
         self.output_size = 40
         self.input_size = 400
@@ -16,10 +18,6 @@ class FastOutputLayer:
         self.input_layer_inputs = input_layer_inputs  # np matrix n by 400
         self.output_layer_outputs = np.zeros((np.size(input_layer_inputs, 0), self.output_size))  # time-step x 100
         self.max_optim_iters = 100
-
-        # it is not + 1 to avoid zero
-        # self.activation_fun = lambda g, mu, r_plus: 2.0 / np.pi * np.arctan(g * (r_plus - mu)) * 0.5 * (
-        #     np.sign(r_plus - mu) + 1 + 1e-10)
 
         # layer parameters
         self.weights = 0.9 + 0.1 * np.random.uniform(0, 1, self.network_size)  # as stated in the paper
@@ -39,7 +37,6 @@ class FastOutputLayer:
         self.tau_plus = .1  # seconds
         self.tau_minus = .3  # seconds
         self.delta_t = 1e-3  # seconds
-        self.debug_mode = False
 
     @staticmethod
     def activation_fun(g, mu, r_plus):
@@ -50,12 +47,12 @@ class FastOutputLayer:
     # computes outputs for each time step from input layer outputs
     def process_all_inputs(self):
         for i in range(np.size(self.input_layer_inputs, 0)):  # for each time step
-            self.g = self.g_0
-            self.mu = self.mu_0
+            # self.g = self.g_0
+            # self.mu = self.mu_0
             input = self.input_layer_inputs[i, :]
             h = np.dot(self.weights, input)  # results in size: (100,)
-            self.r_plus = self.r_plus + (1 / self.tau_plus) * (h - self.r_plus - self.r_minus) * self.delta_t
-            self.r_minus = self.r_minus + (1 / self.tau_minus) * (h - self.r_minus) * self.delta_t
+            self.r_plus += (1 / self.tau_plus) * (h - self.r_plus - self.r_minus) * self.delta_t
+            self.r_minus += (1 / self.tau_minus) * (h - self.r_minus) * self.delta_t
             if self.debug_mode:
                 all_a = []
                 all_s = []
@@ -69,7 +66,7 @@ class FastOutputLayer:
                 if np.sum(np.power(output, 2)) == 0:
                     s = 1
                 else:
-                    s = np.power(a, 2) / np.sum(np.power(output, 2)) * self.output_size  # correct formula - checked by Eren
+                    s = np.power(a, 2) / np.sum(np.power(output, 2)) * self.output_size  # correct formula - checked
 
                 if self.debug_mode:
                     all_a.append(a)
@@ -86,11 +83,15 @@ class FastOutputLayer:
             if self.debug_mode:
                 plt.plot(all_a, label='a')
                 plt.plot(all_s, label='s')
+                plt.legend()
+                plt.title('iteration: ' + str(i))
                 plt.show()
                 plt.plot(all_mu, label='mu')
+                plt.title('iteration: ' + str(i))
                 plt.legend()
                 plt.show()
                 plt.plot(all_g, label='g')
+                plt.title('iteration: ' + str(i))
                 plt.legend()
                 plt.show()
 
