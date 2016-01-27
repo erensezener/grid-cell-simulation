@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 
+NUMBER_OF_ITERS = 1e4
 
 def compute_new_position(x,y,phi,r):
     x_new=x+(r*np.cos(phi))
@@ -40,7 +42,7 @@ def plot_rat_trajectory(rat_matrix):
     plt.show()
 
 def rat2txt(rat_matrix):
-    data= open('Rat_Data.txt', 'w')
+    data= open('Rat_Data_short.txt', 'w')
     for i in range(len(rat_matrix[:,1])):
         data.write(str(rat_matrix[i,0])+ "\t" +str(rat_matrix[i,1])+ "\t" +str(rat_matrix[i,2])+"\n")
     data.close()
@@ -57,6 +59,12 @@ def rat_txt_to_matrix(filename):
         outputmatrix= np.vstack((outputmatrix,v))
     return outputmatrix
 
-#rat=running_rat(4000000)
-#plot_rat_trajectory(rat)
-#rat2txt(rat)
+def main():
+    rat=running_rat(NUMBER_OF_ITERS)
+    plot_rat_trajectory(rat)
+    rat2txt(rat)
+
+if __name__ == '__main__':
+    main()
+
+

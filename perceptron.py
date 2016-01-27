@@ -11,8 +11,8 @@ class Perceptron:
         self.normalize_weights()
         self.avg_input_rates = np.zeros((1, self.input_size))
         self.avg_firing_rate = 0
-        self.r_plus = 1  # TODO initial value?
-        self.r_minus = 1  # TODO initial value?
+        self.r_plus = 0.001  # TODO initial value?
+        self.r_minus = 0.001  # TODO initial value?
         self.mu = 0
         self.g = 4.5
         self.a_0 = a_0
