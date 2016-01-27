@@ -4,12 +4,12 @@ import MNS_Project_New
 import matplotlib.pyplot as plt
 import datetime
 
-FILENAME = 'Rat_Data.txt'
+FILENAME = 'Rat_Data_short.txt'
 
 print 'reading data'
 rat_data = MNS_Project_New.rat_txt_to_matrix(FILENAME)
 print 'data read'
-rat_data = rat_data[1:100000,:]
+rat_data = rat_data[1:1000,:]
 input_layer_outputs = input_neuron.input_rates(rat_data)
 print 'input processed'
 a = datetime.datetime.now().replace(microsecond=0)
