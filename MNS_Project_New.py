@@ -48,21 +48,15 @@ def rat2txt(rat_matrix):
     data.close()
     
 def rat_txt_to_matrix(filename):
-    data=open(str(filename), 'r')
-    outputmatrix=np.zeros(3)
-    for line in data:
-        values=line.split()
-        v=np.zeros(3)
-        v[0]=float(values[0])
-        v[1]=float(values[1])
-        v[2]=float(values[2])
-        outputmatrix= np.vstack((outputmatrix,v))
-    return outputmatrix
+    lines = np.loadtxt(filename, delimiter="\t", unpack=False)
+    return lines
 
 def main():
     rat=running_rat(NUMBER_OF_ITERS)
     plot_rat_trajectory(rat)
     rat2txt(rat)
+    outputthing = rat_txt_to_matrix("Rat_Data_short.txt")
+    print outputthing.shape
 
 if __name__ == '__main__':
     main()
