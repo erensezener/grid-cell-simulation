@@ -6,6 +6,7 @@ import matplotlib.patches as patches
 
 side_length = 125 # cm
 
+
 def create_grid(side_length=side_length):
     input_x = np.linspace(-side_length/2., side_length/2., num=20).reshape(20,1)
     input_x = np.tile(input_x, (20,1))
@@ -16,6 +17,7 @@ def create_grid(side_length=side_length):
     
     input_neurons = np.concatenate((input_x, input_y), axis=1)
     return input_neurons
+
 
 def input_rates(time_positions):
     print 'calculating input rates...'
@@ -32,6 +34,12 @@ def input_rates(time_positions):
     rates = np.exp(- norm_sq / 50.)
     return rates
 
+
+# transforms an array of length 400 to grid of 20x20 preserving the correct positions
+def reshape_vec_to_grid(vector):
+    return vector.reshape((20,20))[::-1]
+
+
 def test():
     #time_positions = np.random.rand(1000,3) * 125 - 62.5
     x = np.linspace(-60,60,1000).reshape(1000,1)
@@ -44,6 +52,7 @@ def test():
     sum_rates = rates.sum(axis=0)
     plt.pcolor(sum_rates.reshape(20,20))
     plt.colorbar()
+
 
 def visualize_grid():
     grid = create_grid()
@@ -63,6 +72,7 @@ def visualize_grid():
     
     axes.add_patch(patches.Rectangle((-62.5,-62.5), 125, 125, fill=False, color='r'))
 
+
 def visualize_activity(positions, rates):
     plt.figure()
     plt.plot(positions[:,0],positions[:,1])
@@ -71,23 +81,6 @@ def visualize_activity(positions, rates):
     
     plt.figure()
     sum_rates = rates.sum(axis=0)
-    
-    plt.pcolor(sum_rates.reshape(20,20))
+    sum_rates = reshape_vec_to_grid(sum_rates)
+    plt.matshow(sum_rates)
     plt.colorbar()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
