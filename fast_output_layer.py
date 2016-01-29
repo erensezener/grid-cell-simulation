@@ -17,8 +17,10 @@ class FastOutputLayer:
         self.s_0 = 0.3
         self.input_layer_inputs = input_layer_inputs  # np matrix n by 400
         self.output_layer_outputs = np.zeros((np.size(input_layer_inputs, 0), self.output_size))  # time-step x 100
-        self.output_save = np.zeros((int(np.size(input_layer_inputs,0)/10000.0+1), self.output_size)) #save output every 10000 timesteps
-        self.weight_save = np.zeros((int(np.size(input_layer_inputs,0)/10000.0+1), self.output_size*self.input_size))
+        self.output_save = np.zeros(
+            (int(np.size(input_layer_inputs, 0) / 10000.0 + 1), self.output_size))  # save output every 10000 timesteps
+        self.weight_save = np.zeros(
+            (int(np.size(input_layer_inputs, 0) / 10000.0 + 1), self.output_size * self.input_size))
         self.max_optim_iters = 100
 
         # layer parameters
@@ -39,13 +41,11 @@ class FastOutputLayer:
         self.tau_plus = .1  # seconds
         self.tau_minus = .3  # seconds
         self.delta_t = 1e-3  # seconds
-        self.debug_mode = True
 
     @staticmethod
     def activation_fun(g, mu, r_plus):
         val = 2.0 / np.pi * np.arctan(g * (r_plus - mu)) * 0.5 * (np.sign(r_plus - mu) + 1.0)
         return val
-
 
     # computes outputs for each time step from input layer outputs
     def process_all_inputs(self):
@@ -82,7 +82,7 @@ class FastOutputLayer:
                     break
 
                 self.mu += self.b_mu * (a - self.a_0)
-                self.g += self.b_g * self.g * (s - self.s_0)
+                self.g += self.b_g * (s - self.s_0)
 
             if self.debug_mode:
                 plt.plot(all_a, label='a')
@@ -102,21 +102,16 @@ class FastOutputLayer:
 
             output = self.activation_fun(self.g, self.mu, self.r_plus)
             self.output_layer_outputs[i, :] = output
-
-            if i%10000==0:
-                self.output_save[int(i/10000.0),:] = output
-
-
-
             self.avg_firing_rate += self.eta * (output - self.avg_firing_rate)  # size: 100
             self.avg_input_rates += self.eta * (input - self.avg_input_rates)  # size: 400
             self.weights += self.epsilon * (
                 np.outer(output, input) - np.outer(self.avg_firing_rate, self.avg_input_rates))
             self.normalize_weights()
-            w=np.reshape(self.weights, np.size(self.weights), order='F')
+            w = np.reshape(self.weights, np.size(self.weights), order='F')
 
-            if i%10000==0:
-                self.weight_save[int(i/10000.0),:]=w
+            if i % 10000 == 0:
+                self.output_save[int(i / 10000.0), :] = output
+                self.weight_save[int(i / 10000.0), :] = w
 
         np.savez("save_output_data", self.output_save)
         np.savez("save_weight_data", self.weight_save)
@@ -124,6 +119,7 @@ class FastOutputLayer:
     def normalize_weights(self):
         normalized_weights = pre.normalize(self.weights, norm='l2', copy='true')
         self.weights = normalized_weights
+
 
 def main():
     layer = FastOutputLayer(np.zeros((100, 400)))
@@ -134,5 +130,4 @@ def main():
 
 
 if __name__ == '__main__':
-     main()
-
+    main()
