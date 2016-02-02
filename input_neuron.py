@@ -22,16 +22,11 @@ def create_grid(side_length=side_length):
 def input_rates(time_positions):
     print 'calculating input rates...'
     input_neurons = create_grid()
-    
-    num_positions = time_positions.shape[0]
-    num_inputs = input_neurons.shape[0]
-    
-    x_diff = input_neurons[:,0].reshape(1,num_inputs) - time_positions[:,0].reshape(num_positions,1)
-    y_diff = input_neurons[:,1].reshape(1,num_inputs) - time_positions[:,1].reshape(num_positions,1)
-    
-    norm_sq = x_diff ** 2 + y_diff ** 2  
-    
-    rates = np.exp(- norm_sq / 50.)
+
+    x_diff = (input_neurons[:,0].reshape(1,input_neurons.shape[0]) - time_positions[:,0].reshape(time_positions.shape[0],1))
+    y_diff = (input_neurons[:,1].reshape(1,input_neurons.shape[0]) - time_positions[:,1].reshape(time_positions.shape[0],1))
+
+    rates = np.exp(- (x_diff ** 2 + y_diff ** 2) / 50.)
     return rates
 
 

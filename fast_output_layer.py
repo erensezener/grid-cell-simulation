@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 class FastOutputLayer:
     def __init__(self, input_layer_inputs):
-        self.debug_mode = True
+        self.debug_mode = False
 
         # layer metaparameters
         self.output_size = 40
@@ -18,9 +18,15 @@ class FastOutputLayer:
         self.input_layer_inputs = input_layer_inputs  # np matrix n by 400
         self.output_layer_outputs = np.zeros((np.size(input_layer_inputs, 0), self.output_size))  # time-step x 100
         self.output_save = np.zeros(
-            (int(np.size(input_layer_inputs, 0) / 10000.0 + 1), self.output_size))  # save output every 10000 timesteps
+            (int(np.size(input_layer_inputs, 0) / 100000.0 + 1), self.output_size))  # save output every 10000 timesteps
         self.weight_save = np.zeros(
-            (int(np.size(input_layer_inputs, 0) / 10000.0 + 1), self.output_size * self.input_size))
+            (int(np.size(input_layer_inputs, 0) / 100000.0 + 1), self.output_size * self.input_size))
+        # self.g_history = np.zeros(
+        #     (np.size(input_layer_inputs, 0), 1))
+        # self.mu_history = np.zeros(
+        #     (np.size(input_layer_inputs, 0), 1))
+        # self.iter_no_history = np.zeros(
+        #     (np.size(input_layer_inputs, 0), 1))
         self.max_optim_iters = 100
 
         # layer parameters
@@ -62,13 +68,14 @@ class FastOutputLayer:
                 all_g = []
                 all_mu = []
 
+            # last_iter_no = self.max_optim_iters
             for j in range(self.max_optim_iters):
                 output = self.activation_fun(self.g, self.mu, self.r_plus)
                 if np.any(np.isnan(output)):
                     print 'nanalert for output'
                 a = np.mean(output)
                 if np.sum(np.power(output, 2)) == 0:
-                    s = 1
+                    s = 0
                 else:
                     s = np.power(a, 2) / np.sum(np.power(output, 2)) * self.output_size  # correct formula - checked
 
@@ -79,10 +86,11 @@ class FastOutputLayer:
                     all_mu.append(self.mu)
                 if (self.a_bounds[0] < a < self.a_bounds[1]) \
                         and (self.s_bounds[0] < s < self.s_bounds[1]):
+                    # last_iter_no = j
                     break
 
                 self.mu += self.b_mu * (a - self.a_0)
-                self.g += self.b_g * (s - self.s_0)
+                self.g += self.b_g * self.g * (s - self.s_0)
 
             if self.debug_mode:
                 plt.plot(all_a, label='a')
@@ -109,12 +117,17 @@ class FastOutputLayer:
             self.normalize_weights()
             w = np.reshape(self.weights, np.size(self.weights), order='F')
 
-            if i % 10000 == 0:
-                self.output_save[int(i / 10000.0), :] = output
-                self.weight_save[int(i / 10000.0), :] = w
+            if i % 100000 == 0:
+                index = int(i / 100000.0)
+                self.output_save[index, :] = output
+                self.weight_save[index, :] = w
+                print 'bla'
 
-        np.savez("save_output_data", self.output_save)
-        np.savez("save_weight_data", self.weight_save)
+        np.savez("firing_rate", self.output_save)
+        np.savez("weights", self.weight_save)
+        # np.savez("g_history", self.g_history)
+        # np.savez("mu_history", self.mu_history)
+        # np.savez("iter_no_history", self.iter_no_history)
 
     def normalize_weights(self):
         normalized_weights = pre.normalize(self.weights, norm='l2', copy='true')
