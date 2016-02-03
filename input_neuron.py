@@ -3,7 +3,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from scipy.sparse import csr_matrix, lil_matrix, dok_matrix
 
+use_sparse_matrices = True
 side_length = 125 # cm
 
 
@@ -28,6 +30,29 @@ def input_rates(time_positions):
 
     rates = np.exp(- (x_diff ** 2 + y_diff ** 2) / 50.)
     return rates
+
+def input_rates_sparse(time_positions):
+    print 'calculating input rates...'
+    input_neurons = create_grid()
+    # rates = lil_matrix((np.size(time_positions,0), np.size(input_neurons,0)), dtype='float32')
+    # rates = np.zeros((np.size(time_positions,0), np.size(input_neurons,0)))
+    rates = dok_matrix((np.size(time_positions,0), np.size(input_neurons,0)), dtype='float32')
+
+
+    for i in range(np.size(time_positions,0)):
+        x_diff = (input_neurons[:,0].reshape(1,input_neurons.shape[0]) - time_positions[i,0])
+        y_diff = (input_neurons[:,1].reshape(1,input_neurons.shape[0]) - time_positions[i,1])
+
+        rates_for_i = np.exp(- (x_diff ** 2 + y_diff ** 2) / 50.)
+        rates_for_i[rates_for_i < 1e-2] = 0
+        for j in np.nonzero(rates_for_i)[1]:
+            rates[i,j] = rates_for_i[0,j]
+
+        if i % 100000 == 0:
+            print 'iter no: ' + str(i * 100000)
+
+        # rates[i,:] = rates_for_i
+    return rates.tocsr()
 
 
 # transforms an array of length 400 to grid of 20x20 preserving the correct positions

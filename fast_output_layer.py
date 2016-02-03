@@ -6,14 +6,15 @@ import matplotlib.pyplot as plt
 class FastOutputLayer:
     def __init__(self, input_layer_inputs):
         self.debug_mode = False
+        self.sparse_matrix_mode = True
 
         # layer metaparameters
-        self.output_size = 40
+        self.output_size = 100
         self.input_size = 400
         self.network_size = (self.output_size, self.input_size)
-        self.a_bounds = (0.08, 0.12)
+        self.a_bounds = (0.095, 0.105)
         self.a_0 = 0.1
-        self.s_bounds = (0.25, 0.35)
+        self.s_bounds = (0.295, 0.315)
         self.s_0 = 0.3
         self.input_layer_inputs = input_layer_inputs  # np matrix n by 400
         self.output_layer_outputs = np.zeros((np.size(input_layer_inputs, 0), self.output_size))  # time-step x 100
@@ -58,7 +59,10 @@ class FastOutputLayer:
         for i in range(np.size(self.input_layer_inputs, 0)):  # for each time step
             # self.g = self.g_0
             # self.mu = self.mu_0
-            input = self.input_layer_inputs[i, :]
+            if self.sparse_matrix_mode:
+                input = np.reshape(self.input_layer_inputs[i, :].toarray(), 400)
+            else:
+                input = self.input_layer_inputs[i, :]
             h = np.dot(self.weights, input)  # results in size: (100,)
             self.r_plus += (1 / self.tau_plus) * (h - self.r_plus - self.r_minus) * self.delta_t
             self.r_minus += (1 / self.tau_minus) * (h - self.r_minus) * self.delta_t
@@ -121,10 +125,8 @@ class FastOutputLayer:
                 index = int(i / 100000.0)
                 self.output_save[index, :] = output
                 self.weight_save[index, :] = w
-                print 'bla'
 
-        np.savez("firing_rate", self.output_save)
-        np.savez("weights", self.weight_save)
+
         # np.savez("g_history", self.g_history)
         # np.savez("mu_history", self.mu_history)
         # np.savez("iter_no_history", self.iter_no_history)
@@ -133,6 +135,10 @@ class FastOutputLayer:
         normalized_weights = pre.normalize(self.weights, norm='l2', copy='true')
         self.weights = normalized_weights
 
+
+    def save_data_to_disk(self):
+        np.savez("firing_rate", self.output_save)
+        np.savez("weights", self.weight_save)
 
 def main():
     layer = FastOutputLayer(np.zeros((100, 400)))
