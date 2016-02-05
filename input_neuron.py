@@ -48,8 +48,8 @@ def input_rates_sparse(time_positions):
         for j in np.nonzero(rates_for_i)[1]:
             rates[i,j] = rates_for_i[0,j]
 
-        if i % 100000 == 0:
-            print 'iter no: ' + str(i * 100000)
+        # if i % 100000 == 0:
+        #     print 'iter no: ' + str(i / 100000)
 
         # rates[i,:] = rates_for_i
     return rates.tocsr()

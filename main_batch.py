@@ -1,4 +1,4 @@
-import fast_output_layer
+import fast_output_layer_batch
 import input_neuron
 import rat_simulator
 import matplotlib.pyplot as plt
@@ -10,31 +10,37 @@ import os
 
 SUB_DIR = '9M'
 FILENAME = 'data/Rat_Data_9M.txt'
-INPUT_LAYER_OUTPUTS = 'results/' + SUB_DIR + '/input_layer.mtx'
-# FILENAME = 'data/Rat_Data.txt'
+# INPUT_LAYER_OUTPUTS = 'results/' + SUB_DIR + '/input_layer.mtx'
 
-# if not os.path.isdir(SUB_DIR):
-#     os.makedirs(SUB_DIR)
-
+NUMBER_OF_BATCHES = 100
 
 print 'reading data'
 rat_data = rat_simulator.rat_txt_to_matrix(FILENAME)
 print 'data read'
-# rat_data = rat_data[:1e6,:]
+# rat_data = rat_data[:1e4,:]
 print 'number of data points: ' + str(np.shape(rat_data))
+number_of_data_points = np.size(rat_data, 0)
 
-a = datetime.datetime.now().replace(microsecond=0)
-input_layer_outputs = input_neuron.input_rates_sparse(rat_data)
-b = datetime.datetime.now().replace(microsecond=0)
-io.mmwrite(INPUT_LAYER_OUTPUTS, input_layer_outputs) #write sparse matrix to a file in COO format
-print 'number of nnz from input layer ' + str(input_layer_outputs.nnz)
-print 'input processed in ' + str(b-a)
+output_layer = fast_output_layer_batch.FastOutputLayerBatch(number_of_data_points, NUMBER_OF_BATCHES)
 
-a = datetime.datetime.now().replace(microsecond=0)
-output_layer = fast_output_layer.FastOutputLayer(input_layer_outputs)
-output_layer.process_all_inputs()
-b = datetime.datetime.now().replace(microsecond=0)
-print 'output processed in ' + str(b-a)
+batch_size = int(number_of_data_points / NUMBER_OF_BATCHES)
+
+for i in range(NUMBER_OF_BATCHES):
+    print 'batch: ' + str(i)
+    a = datetime.datetime.now().replace(microsecond=0)
+    input_layer_outputs = input_neuron.input_rates_sparse(rat_data[i*batch_size:((i+1)*batch_size), :])
+    b = datetime.datetime.now().replace(microsecond=0)
+    # io.mmwrite(INPUT_LAYER_OUTPUTS, input_layer_outputs) #write sparse matrix to a file in COO format
+    print 'number of nnz from input layer ' + str(input_layer_outputs.nnz)
+    print 'input processed in ' + str(b-a)
+
+    a = datetime.datetime.now().replace(microsecond=0)
+    output_layer.process_all_inputs(input_layer_outputs)
+    b = datetime.datetime.now().replace(microsecond=0)
+    print 'output processed in ' + str(b-a)
+
+output_layer.save_data_to_disk()
+
 
 for i in range(100):
     weights = input_neuron.reshape_vec_to_grid(output_layer.weights[i, :])
