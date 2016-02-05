@@ -1,0 +1,225 @@
+\begin{frame}\frametitle{Place Cells}
+\begin{center}
+\includegraphics[scale=.3]{pics/place_cell_locations}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model: Overview}
+\begin{center}
+input layer output layer magic processing output
+\begin{tikzpicture}[->]
+
+	% draw input layer
+	\foreach \s in {0,...,7}
+	{
+		\node[draw, circle] (i_\s) at (0,-\s * 0.5) {};
+	}
+	
+	% draw output layer	
+	\foreach \s in {0,...,2}
+	{
+		\node[draw, circle] (o_\s) at (3,-1.25 -\s * 0.5) {};
+		\node[draw, circle] (m_\s) at (5,-1.25 -\s * 0.5) {};
+		\path (o_\s) edge node {} (m_\s);
+		\draw[->] (5.18,-1.25 -\s * 0.5) -- (6,-1.25 -\s * 0.5);
+	}
+	
+	% draw edges
+	\foreach \s in {0,...,7}
+	{
+			\path (i_\s) edge node {} (o_0);
+	}
+	\path (i_0) edge node {} (o_1);
+	\path (i_0) edge node {} (o_2);
+
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model: Overview}
+\begin{center}
+input layer output layer magic processing output
+\begin{tikzpicture}[->]
+
+	% draw input layer
+	\foreach \s in {0,...,7}
+	{
+		\node[draw, circle] (i_\s) at (0,-\s * 0.5) {};
+	}
+
+	\node (w) at (2, -2.7) {$w_{ij}$};	
+	
+	% draw output layer	
+	\foreach \s in {0,...,2}
+	{
+		\node[draw, circle] (o_\s) at (3,-1.25 -\s * 0.5) {};
+		\node[draw, circle] (m_\s) at (5,-1.25 -\s * 0.5) {};
+		\path (o_\s) edge node {} (m_\s);
+		\draw[->] (5.18,-1.25 -\s * 0.5) -- (6,-1.25 -\s * 0.5);
+	}
+	
+	% draw edges
+	\foreach \s in {0,...,7}
+	{
+			\path (i_\s) edge node {} (o_0);
+	}
+	\path (i_0) edge node {} (o_1);
+	\path (i_0) edge node {} (o_2);
+
+\end{tikzpicture}
+\end{center}
+\hskip 3cm$input_i$\hskip 2cm $output_j$\\
+\hskip 3cm$i=1,...,400$\hskip 1cm $j=1,...,100$
+\end{frame}
+\setlength{\columnseprule}{0.4pt}
+
+\begin{frame}
+\frametitle{Model: Input Layer}
+\begin{multicols}{2}
+\begin{center}
+\includegraphics[scale=.1]{pics/model_input}
+\vskip 2mm
+\includegraphics[scale=.15]{pics/place_cell_locations}
+\end{center}
+\columnbreak
+\begin{center}
+$input_i = \exp(-\frac{||rat - center_i||^2}{50})$
+\vskip 20mm
+\includegraphics[scale=.3]{pics/gauss}
+\end{center}
+\end{multicols}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model: Input Layer}
+\begin{multicols}{2}
+\begin{center}
+\includegraphics[scale=.1]{pics/model_input}
+\vskip 2mm
+\includegraphics[scale=.15]{pics/place_cell_locations}
+\end{center}
+\columnbreak
+\begin{center}
+\includegraphics[scale=.3]{pics/mouse_demo}
+\vskip 4mm
+\includegraphics[scale=.4]{pics/activity_demo}
+\end{center}
+\end{multicols}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model: Output Layer}
+\begin{multicols}{2}
+\begin{center}
+\includegraphics[scale=.1]{pics/model_output}
+\end{center}
+\columnbreak
+\begin{center}
+$h_j = \sum_i w_{ij} \cdot input_i$
+\vskip 5mm
+$\rightarrow$ How to determine\\ \hskip 4mm the weights $w_{ij}$?
+\end{center}
+\end{multicols}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model: Output Layer}
+\begin{multicols}{2}
+\begin{center}
+\includegraphics[scale=.1]{pics/model_output}
+\end{center}
+\columnbreak
+\begin{center}
+$h_j = \sum_i w_{ij} \cdot input_i$
+\vskip 5mm
+$\rightarrow$ How to determine\\ \hskip 4mm the weights $w_{ij}$?\\
+$\rightarrow$ Hebbian learning dynamics\\
+\end{center}
+\end{multicols}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model: Output Layer}
+\begin{multicols}{2}
+\begin{center}
+\includegraphics[scale=.1]{pics/model_output}
+\end{center}
+\columnbreak
+\begin{center}
+$h_j = \sum_i w_{ij} \cdot input_i$
+\vskip 5mm
+$\rightarrow$ How to determine\\ \hskip 4mm the weights $w_{ij}$?\\
+$\rightarrow$ Hebbian learning dynamics\\
+\hskip 7mm 'Fire together, wire together'\\
+$\rightarrow$ Details on that in 2 slides
+\end{center}
+\end{multicols}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model: Processing}
+\begin{multicols}{2}
+\begin{center}
+\includegraphics[scale=.1]{pics/model_processing}
+\end{center}
+\columnbreak
+\begin{center}
+$h_j(t) = \sum_i w_{ij} \cdot input_i(t)$\\
+\vskip 6mm
+$\rightarrow$ adaptation dynamics:\\
+\vskip 3mm
+$\tau^+\frac{d}{dt}r^+_j=h_j(t)-r^+_j(t)-r^-_j(t)$\\
+\vskip 3mm
+$\tau^-\frac{d}{dt}r^-_j(t)=r^-_j(t)$
+\vskip 5mm
+\end{center}
+\end{multicols}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model: Processing}
+\begin{multicols}{2}
+\begin{center}
+\includegraphics[scale=.1]{pics/model_processing}
+\vskip 3mm
+\includegraphics[scale=.3]{pics/output_function}
+\end{center}
+\columnbreak
+\begin{center}
+$h_j(t) = \sum_i w_{ij} \cdot input_i(t)$\\
+\vskip 6mm
+$\rightarrow$ adaptation dynamics:\\
+\vskip 3mm
+$\tau^+\frac{d}{dt}r^+_j=h_j(t)-r^+_j(t)-r^-_j(t)$\\
+\vskip 3mm
+$\tau^-\frac{d}{dt}r^-_j(t)=r^-_j(t)$\\
+\vskip 3mm
+$\rightarrow$ output:\\
+\vskip 3mm
+$output_j(t)=\frac{2}{\pi} \arctan (g \cdot (r^+_j(t)-\mu)) \cdot \theta(r_j^+(t)-\mu)$\\
+\vskip 3mm
+$g$ - gain, $\mu$ - threshold
+\end{center}
+\end{multicols}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model: Weight Updates}
+\begin{multicols}{2}
+\begin{center}
+\includegraphics[scale=.1]{pics/model_output_2}
+\end{center}
+\columnbreak
+\begin{center}
+$h_j = \sum_i w_{ij} \cdot input_i$
+\vskip 5mm
+$\rightarrow$ How to determine\\ \hskip 4mm the weights $w_{ij}$?\\
+$\rightarrow$ Hebbian learning dynamics\\
+\vskip 4mm
+$w_{ij}(t+\Delta)=w_{ij}(t)+$\\
+$ \epsilon (input_i(t)\cdot output_j - \sum_s input_i (s) \cdot \sum_s output_j(s))$
+\end{center}
+\end{multicols}
+\end{frame}
