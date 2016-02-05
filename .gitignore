@@ -4,3 +4,10 @@
 .DS_Store
 data
 results
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.gz
+*.toc

@@ -11,8 +11,12 @@
 \usecolortheme{seahorse}
 %
 %
+\usepackage{graphicx}
+\graphicspath{{.}{./neurons}}
+
+
 \title[MNS Project 2]{MNS Project 2: Learning of Grid Cells}
-\author[C. Lang, E. Sezener, C.Winklmayr]{Claus Lang, Eren Sezener and Claudia Winklmayr}
+\author[C. Lang, C. E. Sezener, C.Winklmayr]{Claus Lang, C. Eren Sezener and Claudia Winklmayr}
 \institute{BCCN}
 \date[9.2.2016]{February $9^{th}$ 2016}
 %
@@ -36,7 +40,7 @@
 \frametitle{Introduction}
 \includegraphics[width=0.7\textwidth]{mEC.jpg}\newline
 %http://www.irafs.org/images/irafs_nl_eng_2_files/image007.jpg
-In Hippocampus and the medial enthorhinal cortex (mEC) various types of neurones have been found that encode an animals spacial location.  
+In Hippocampus and the medial enthorhinal cortex (mEC) various types of neurons have been found that encode an animals spacial location.  
 \end{frame}
 % 
 %
@@ -79,7 +83,7 @@ In Hippocampus and the medial enthorhinal cortex (mEC) various types of neurones
 			\item Located in  medial enthorhinal cortex (mEC). Activated at several spacial positions. The firing map shows an equally spaced hexagonal pattern. 
 			%\item Perform path integration i.e. process information about location, direction, speed
 			\item Mostly independent of visual stimulus
-			\item Different grid cells show diffrend spacing, orientation and size of their patterns.
+			\item Different grid cells show different spacing, orientation and size of their patterns.
 			\item Spacing from 25cm to 3m. 
 			\end{itemize}
     \end{column}
@@ -100,7 +104,7 @@ In Hippocampus and the medial enthorhinal cortex (mEC) various types of neurones
 		    \item Square environment of size $125 \times 125$ cm.
 		    \item Speed: $v=0.4$ m/s
 		    \item Initialization with random position
-		    \item Every 10ms: chose new direction from a gaussian distibution with 
+		    \item Every 10ms: chose new direction from a gaussian distribution with 
 		    	\begin{itemize}
 		    	\item $\mu=$ previous direction
 		    	\item $\sigma= 0.2$
@@ -108,13 +112,14 @@ In Hippocampus and the medial enthorhinal cortex (mEC) various types of neurones
 		    \end{itemize}
     \end{column}
     \begin{column}{.5\textwidth}
-    \includegraphics[width=6cm]{running_rat.jpeg}
+    \includegraphics[width=6cm]{running_rat.png}
     %\caption{running time: 5 seconds}
     \end{column}
   \end{columns}
 \end{frame}
 
 \input{include/model_presentation.tex}
+\input{include/results_presentation.tex}
 
 
 \end{document}
