@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{caption}
+\usepackage{subfigure}
 
 
 \pagestyle{fancy}
@@ -25,7 +26,8 @@
 \maketitle
 
 \paragraph{Abstract:}
-Grid cells, located in rats medial entorhinal cortex (mEC), show increased fireing activity when the animal enters specific regions of the environment. The resulting firing maps show a characteristic hexagonal grid pattern. In our project we implement a computational model for the developement of grid cells, introduced by Kropff and Treves. We simulate a rat exploring a square environment at constant speed. The $x$ and $y$ coordinates of its loactions serve as input for a layer of 400 place units. The output layer then recieves a weighted sum of the place cells activity to compute the activation of 100 grid cells.
+Grid cells, located in rats medial entorhinal cortex (mEC), show increased firing activity when the animal enters specific regions of the environment. The resulting firing maps show a characteristic hexagonal grid pattern. In our project we implement a computational model for the development of grid cells, introduced by Kropff and Treves. We simulate a rat exploring a square environment at constant speed. The $x$ and $y$ coordinates of its loactions serve as input for a layer of 400 place units. The output layer then recieves a weighted sum of the place cells activity to compute the activation of 100 grid cells.
+ 
 
 \section{Introduction}
 There are various types of neurons that serve to encode an animals spacial location. Place cells - located in hippocampus - were discovered in the 1970s by O'Keefe and Dostrovsky. Place cells show increased activity when the animal enters a specific region of the environment - the so called place field.\newline
@@ -136,10 +138,9 @@ After each update the weights are again normalized to unit norm.
 %
 %
 \section{Results}
-%
+We ran the simulation for 2.5 hours in rat time. The results show that this duration is sufficient for grid cells to develop. Figure \ref{time-evol} shows the time evolution of weights of a grid cell. The cell we picked has one of the most apparent grid structure among the other cells.
 
-
-\subsection{Time evolution}
+%\subsection{Time evolution}
 \begin{figure}[htbp]
 \begin{minipage}[hbt]{0,49\textwidth}
         \centering
@@ -158,7 +159,20 @@ After each update the weights are again normalized to unit norm.
         \label{LabelB}
 \end{minipage}
 \centering
-\caption{Developement }
+\caption{The weights and the autocorrelogram of a neuron at the beginning, middle and the end of the simulation}
+\label{time-evol}
+\end{figure}
+
+When all grid cells are inspected, it is seen that most grid cells have similar spatial frequencies, however, their orientations and off-sets are different. Figure \ref{diff} illustrates this difference. 
+
+\begin{figure}
+\hfill
+\subfigure{\includegraphics[width=6cm]{neurons/neuron_w_12.png}}
+\hfill
+\subfigure{\includegraphics[width=6cm]{neurons/neuron_w_14.png}}
+\hfill
+\caption{Different grid cells have different orientations and off-sets but similar spatial frequencies.}
+\label{diff}
 \end{figure}
 
 \section{References}
