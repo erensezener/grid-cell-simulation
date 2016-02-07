@@ -30,8 +30,8 @@ Grid cells, located in rats medial entorhinal cortex (mEC), show increased firin
  
 
 \section{Introduction}
-There are various types of neurons that serve to encode an animals spacial location. Place cells - located in hippocampus - were discovered in the 1970s by O'Keefe and Dostrovsky. Place cells show increased activity when the animal enters a specific region of the environment - the so called place field.\newline
-Grid cells - located in medial entorhinal cortex (mEC) were then discovered in 2005. In contrast to place cells they are activated at various locations and their firing maps show a characteristic hexagonal grid pattern. Different grid cells can be distinguished by their spacing, orientation and spacial phases. Neighboring grid cells usually show similar and orientation. \newline
+There are various types of neurons that serve to encode an animals spatial location. Place cells - located in hippocampus - were discovered in the 1970s by O'Keefe and Dostrovsky. Place cells show increased activity when the animal enters a specific region of the environment - the so called place field.\newline
+Grid cells - located in medial entorhinal cortex (mEC) were then discovered in 2005. In contrast to place cells they are activated at various locations and their firing maps show a characteristic hexagonal grid pattern. Different grid cells can be distinguished by their spacing, orientation and spatial phases. Neighboring grid cells usually show similar and orientation. \newline
 It is assumed that grid cells perform a path integration task, taking into account the rats position, speed and direction. Visual information on the other hand plays at most a secondary role in the formation of the grid pattern. \newline
 The Kropff and Treves model assumes places cells as the basis for grid cell development. The place cells take as input the $x$ and $y$ coordinates of a virtual rat exploring a square environment of 125cm length. Every output unit then receives input from all place cells and the weights connecting input and output neurons are updated by a Hebbian learning rule. 
 %
@@ -40,16 +40,16 @@ The Kropff and Treves model assumes places cells as the basis for grid cell deve
 \section{Model}
 The model consists of a layer of 400 input neurons (simulating place cells) and 100 ouput neurons (simulation grid cells), every unit of the input layer being connected to every unit of the output layer. By $w_{ij}$ we denote the weight of the connection between the $j$-th input unit and the $i$-th output unit. 
 \begin{figure}
-\includegraphics[width=0.5\textwidth]{model_overview.png}
+\includegraphics[width=0.5\textwidth]{pics/model_overview.png}
 \end{figure}
-\subsection{Spacial Information}
+\subsection{Spatial Information}
 \begin{figure}[h]
 \begin{minipage}{0.5\textwidth}
 	\includegraphics[width=5cm, height=5cm]{running_rat.png}
 	\caption{\footnotesize{trajectory of the virtual rat exploring for 50 seconds}}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-To create the spacial coordinates that serve as input for the first layer of neurons, we simulate a rat exploring a square environment of size 125cm $\times$ 125cm at a speed of 0.4 m/s. At each timestep $\tau=$10ms we chose a new direction by randomly drawing an angle $\phi$ from a normal distribution, which is centered around the direction at the prvious timestep and has a standard deviation of 0.2rad.   
+To create the spatial coordinates that serve as input for the first layer of neurons, we simulate a rat exploring a square environment of size 125cm $\times$ 125cm at a speed of 0.4 m/s. At each timestep $\tau=$10ms we chose a new direction by randomly drawing an angle $\phi$ from a normal distribution, which is centered around the direction at the prvious timestep and has a standard deviation of 0.2rad.   
 \end{minipage}
 \end{figure}
 
@@ -63,13 +63,13 @@ The input layer consists of 400 place units processing information about the rat
 \setlength{\abovecaptionskip}{5pt}
 \setlength{\belowcaptionskip}{0pt}
 \begin{minipage}[t]{0.3\textwidth}\vspace{0pt}
-\includegraphics[width=4cm, height=4cm]{place_cell_locations}
+\includegraphics[width=4cm, height=4cm]{pics/place_cell_locations}
 \end{minipage}\hfill%
 \begin{minipage}[t]{0.3\textwidth}\vspace{0pt}
-\includegraphics[width=4cm, height=4cm]{mouse_demo}
+\includegraphics[width=4cm, height=4cm]{pics/mouse_demo}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.3\textwidth}\vspace{0pt}
-\includegraphics[width=5cm, height=5cm]{activity_demo}
+\includegraphics[width=5cm, height=5cm]{pics/activity_demo}
 \end{minipage}
 \caption{\footnotesize{From left to right: (i) distribution of place fields across the environment, (ii) trajectory of the virtual rat and (iii) corresponding activity of place cells.}}
 \end{figure}
@@ -81,7 +81,7 @@ At each timestep every output unit recieves as input a weighted sum $h$ of the a
 	\begin{equation}
 	h_i(t)=\sum_jw_{ij}r_j^{in}(t).
 	\end{equation}
-This input is then subject to an dynamic adaptaion process, during which we also determine parameters $g$ and $\mu$ which controll the mean firing activity across neuons as well as the sparsity. To calculate the final output $r_i^{out}(t)$, we then use a nonlinear activation function:
+This input is then subject to an dynamic adaptaion process, during which we also determine parameters $g$ and $\mu$ which control the mean firing activity across neuons as well as the sparsity. To calculate the final output $r_i^{out}(t)$, we then use a nonlinear activation function:
 	\begin{equation}
 	r_i^{out}(t) = f(r^+(h_i(t)); g,\mu).
 	\end{equation}
@@ -102,7 +102,7 @@ The control parameters $g$ and $\mu$ are determined by itereation. $g$ serves to
 \setlength{\abovecaptionskip}{5pt}
 \setlength{\belowcaptionskip}{0pt}	
 	\begin{minipage}[t]{0.5\textwidth}\vspace{0pt}
-	\includegraphics[width=5cm, height=4cm]{output_function.png}
+	\includegraphics[width=5cm, height=4cm]{pics/output_function.png}
 	\caption{\footnotesize{Activation function for output neurons}}
 	\end{minipage}
 \hfill
