@@ -4,8 +4,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-TOTAL_DURATION_IN_MS = 5e4
-FILE = "data/Rat_Data_9M.txt"
+TOTAL_DURATION_IN_MS = 36e7
+FILE = "data/Rat_Data_36M_r.txt"
 
 def compute_new_position(x,y,phi,r):
     x_new=x+(r*np.cos(phi))
@@ -53,7 +53,7 @@ def rat_txt_to_matrix(filename):
 
 def main():
     rat=running_rat(TOTAL_DURATION_IN_MS)
-    plot_rat_trajectory(rat)
+    # plot_rat_trajectory(rat)
     rat2txt(rat)
     # outputthing = rat_txt_to_matrix(FILE)
     # print outputthing.shape

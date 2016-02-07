@@ -20,6 +20,8 @@ class FastOutputLayerBatch:
         self.output_layer_outputs = np.zeros((self.total_input_size, self.output_size))  # time-step x 100
         self.output_save = np.zeros((number_of_batches, self.output_size))  # save output every 10000 timesteps
         self.weight_save = np.zeros((number_of_batches, self.output_size * self.input_size))
+        self.param_save = np.zeros((number_of_batches, 2)) #g, mu
+
         self.max_optim_iters = 100
 
         # layer parameters
@@ -95,7 +97,15 @@ class FastOutputLayerBatch:
         w = np.reshape(self.weights, np.size(self.weights), order='F')
         self.output_save[self.last_batch, :] = self.activation_fun(self.g, self.mu, self.r_plus)
         self.weight_save[self.last_batch, :] = w
+        self.param_save[self.last_batch, 0] = self.g
+        self.param_save[self.last_batch, 1] = self.mu
         self.last_batch +=1
+
+
+    def compute_outputs(self, input):
+        h = np.dot(self.weights, input)  # results in size: (100,)
+        h.reshape(np.shape(self.r_plus)) #to be on the safe side
+        return self.activation_fun(self.g, self.mu, h)
 
 
     def normalize_weights(self):
@@ -105,3 +115,5 @@ class FastOutputLayerBatch:
     def save_data_to_disk(self):
         np.savez("firing_rate", self.output_save)
         np.savez("weights", self.weight_save)
+        np.savez("params", self.param_save)
+

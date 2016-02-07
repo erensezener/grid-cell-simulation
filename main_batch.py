@@ -4,15 +4,14 @@ import rat_simulator
 import matplotlib.pyplot as plt
 import datetime
 import numpy as np
-from scipy import sparse, io
 import autocorrelation
-import os
 
-SUB_DIR = '9M'
-FILENAME = 'data/Rat_Data_9M.txt'
+
+SUB_DIR = '36M'
+FILENAME = 'data/Rat_Data_36M.txt'
 # INPUT_LAYER_OUTPUTS = 'results/' + SUB_DIR + '/input_layer.mtx'
 
-NUMBER_OF_BATCHES = 100
+NUMBER_OF_BATCHES = 400
 
 print 'reading data'
 rat_data = rat_simulator.rat_txt_to_matrix(FILENAME)
@@ -50,7 +49,7 @@ for i in range(100):
     plt.savefig('results/' + SUB_DIR + '/neuron_w_' + str(i) +'.png', format="png")
     plt.close()
 
-    plt.matshow(autocorrelation.autocorrelation(weights))
+    plt.matshow(autocorrelation.autocorrelation_normalized(weights))
     plt.colorbar()
     plt.title('Autocorr. of neuron ' + str(i))
     plt.savefig('results/' + SUB_DIR + '/neuron_a_' + str(i) +'.png', format="png")
