@@ -7,11 +7,11 @@ import numpy as np
 import autocorrelation
 
 
-SUB_DIR = '36M'
-FILENAME = 'data/Rat_Data_36M.txt'
+SUB_DIR = '36M_2'
+FILENAME = 'data/Rat_Data_9M.txt'
 # INPUT_LAYER_OUTPUTS = 'results/' + SUB_DIR + '/input_layer.mtx'
 
-NUMBER_OF_BATCHES = 400
+NUMBER_OF_BATCHES = 100
 
 print 'reading data'
 rat_data = rat_simulator.rat_txt_to_matrix(FILENAME)
