@@ -65,82 +65,100 @@ input layer output layer magic processing output
 \end{tikzpicture}
 \end{frame}
 
-
 \begin{frame}
 \frametitle{Model: Output Layer}
-\begin{multicols}{2}
-\begin{center}
-\includegraphics[scale=.1]{pics/model_output}
-\end{center}
-\columnbreak
-\begin{center}
-$h_j = \sum_i w_{ij} \cdot input_i$
-\end{center}
-\end{multicols}
+\begin{tikzpicture}[overlay,remember picture]
+\node[anchor=north west] at ($(current page.north west)+(0,-1)$) {
+  \includegraphics[scale=.1]{pics/model_output}
+};
+\node[anchor=north east] at ($(current page.north east)+(-2,-1.5)$) {
+  $h_j(t) = \sum_i w_{ij} \cdot input_i(t)$
+};
+\end{tikzpicture}
 \end{frame}
 
 \begin{frame}
 \frametitle{Model: Output Layer}
-\begin{multicols}{2}
-\begin{center}
-\includegraphics[scale=.1]{pics/model_output}
-\end{center}
-\columnbreak
-\begin{center}
-$h_j(t) = \sum_i w_{ij} \cdot input_i(t)$\\
-\vskip 6mm
-$\rightarrow$ adaptation dynamics:\\
-\vskip 3mm
-$\tau^+\frac{d}{dt}r^+_j=h_j(t)-r^+_j(t)-r^-_j(t)$\\
-\vskip 3mm
-$\tau^-\frac{d}{dt}r^-_j(t)=r^-_j(t)$
-\vskip 5mm
-\end{center}
-\end{multicols}
+\begin{tikzpicture}[overlay,remember picture]
+\node[anchor=north west] at ($(current page.north west)+(0,-1)$) {
+  \includegraphics[scale=.1]{pics/model_output}
+};
+\node[anchor=north east] at ($(current page.north east)+(-2,-1.5)$) {
+  $h_j(t) = \sum_i w_{ij} \cdot input_i(t)$
+};
+\node[anchor=north east] at ($(current page.north east)+(-3,-4)$) {
+  $\rightarrow$ adaptation dynamics:
+};
+\node[anchor=north east] at ($(current page.north east)+(-1.1,-4.7)$) {
+  $\tau^+\frac{d}{dt}r^+_j(t)=h_j(t)-r^+_j(t)-r^-_j(t)$
+};
+\node[anchor=north east] at ($(current page.north east)+(-3.7,-5.6)$) {
+  $\tau^-\frac{d}{dt}r^-_j(t)=r^-_j(t)$
+};
+\node[anchor=north west] at ($(current page.north west)+(0.5,-3.5)$) {
+  \includegraphics[scale=.2]{pics/sinusoidal_activation}
+};
+\end{tikzpicture}
 \end{frame}
 
 \begin{frame}
 \frametitle{Model: Output Layer}
-\begin{multicols}{2}
-\begin{center}
-\includegraphics[scale=.1]{pics/model_output}
-\vskip 3mm
-\includegraphics[scale=.3]{pics/output_function}
-\end{center}
-\columnbreak
-\begin{center}
-$h_j(t) = \sum_i w_{ij} \cdot input_i(t)$\\
-\vskip 6mm
-$\rightarrow$ adaptation dynamics:\\
-\vskip 3mm
-$\tau^+\frac{d}{dt}r^+_j=h_j(t)-r^+_j(t)-r^-_j(t)$\\
-\vskip 3mm
-$\tau^-\frac{d}{dt}r^-_j(t)=r^-_j(t)$\\
-\vskip 3mm
-$\rightarrow$ output:\\
-\vskip 3mm
-$output_j(t)=\frac{2}{\pi} \arctan (g \cdot (r^+_j(t)-\mu)) \cdot \theta(r_j^+(t)-\mu)$\\
-\vskip 3mm
-$g$ - gain, $\mu$ - threshold
-\end{center}
-\end{multicols}
+\begin{tikzpicture}[overlay,remember picture]
+\node[anchor=north west] at ($(current page.north west)+(0,-1)$) {
+  \includegraphics[scale=.1]{pics/model_output}
+};
+\node[anchor=north east] at ($(current page.north east)+(-3,-1.7)$) {
+  $\rightarrow$ solution $r^+_j(t)$
+};
+\node[anchor=north east] at ($(current page.north east)+(-1.5,-4.5)$) {
+  $output_j(t) = F(r^+_j(t);g(t),\mu(t))$
+};
+\node[anchor=north east] at ($(current page.north east)+(-3.2,-5.6)$) {
+  $g(t)$ - gain
+};
+\node[anchor=north east] at ($(current page.north east)+(-2.7,-6.5)$) {
+  $\mu(t)$ - threshold
+};
+\node[anchor=north west] at ($(current page.north west)+(0.5,-3.5)$) {
+  \includegraphics[scale=.2]{pics/output_function}
+};
+\end{tikzpicture}
 \end{frame}
+
 
 \begin{frame}
 \frametitle{Model: Weight Updates}
-\begin{multicols}{2}
-\begin{center}
-\includegraphics[scale=.1]{pics/model_output}
-\end{center}
-\columnbreak
-\begin{center}
-$h_j = \sum_i w_{ij} \cdot input_i$
-\vskip 5mm
-$\rightarrow$ How to determine\\ \hskip 4mm the weights $w_{ij}$?\\
-$\rightarrow$ Hebbian learning dynamics\\
-\vskip 4mm
-$w_{ij}(t+\Delta)=w_{ij}(t)+$\\
-$ \epsilon (input_i(t)\cdot output_j - \sum_s input_i (s) \cdot \sum_s output_j(s))$
-\end{center}
-\end{multicols}
+\begin{tikzpicture}[overlay,remember picture]
+\node[anchor=north west] at ($(current page.north west)+(0,-1)$) {
+  \includegraphics[scale=.1]{pics/model_weights}
+};
+\node[anchor=north east] at ($(current page.north east)+(-2.1,-1.7)$) {
+  $h_j(t) = \sum_i w_{ij} \cdot input_i(t)$
+};
+\node[anchor=north west] at ($(current page.north west)+(1,-4)$) {
+  How to determine the weights $w_{ij}$?
+};
+\end{tikzpicture}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Model: Weight Updates}
+\begin{tikzpicture}[overlay,remember picture]
+\node[anchor=north west] at ($(current page.north west)+(0,-1)$) {
+  \includegraphics[scale=.1]{pics/model_weights}
+};
+\node[anchor=north east] at ($(current page.north east)+(-2.1,-1.7)$) {
+  $h_j(t) = \sum_i w_{ij} \cdot input_i(t)$
+};
+\node[anchor=north west] at ($(current page.north west)+(1,-4)$) {
+  How to determine the weights $w_{ij}$?
+};
+\node[anchor=north west] at ($(current page.north west)+(1,-4.7)$) {
+  $\rightarrow$ Hebbian learning dynamics ('Fire together, wire together')
+};
+\node[anchor=north west] at ($(current page.north west)+(1,-6)$) {
+  $w_{ij}(t+\Delta t) = w_{ij}(t) + \epsilon(input_i(t)\cdot output_j(t) - \overline{input_j} \cdot \overline{output_j})$
+};
+\end{tikzpicture}
 \end{frame}
