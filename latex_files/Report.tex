@@ -26,40 +26,42 @@
 \maketitle
 
 \paragraph{Abstract:}
-Grid cells, located in rats medial entorhinal cortex (mEC), show increased firing activity when the animal enters specific regions of the environment. The resulting firing maps show a characteristic hexagonal grid pattern. In our project we implement a computational model for the development of grid cells, introduced by Kropff and Treves. We simulate a rat exploring a square environment at constant speed. The $x$ and $y$ coordinates of its loactions serve as input for a layer of 400 place units. The output layer then recieves a weighted sum of the place cells activity to compute the activation of 100 grid cells.
+Grid cells, located in rats medial entorhinal cortex (mEC), show increased firing activity when the animal enters specific regions of the environment and their firing maps show a characteristic hexagonal grid pattern. In our project we implement a computational model for the development of grid cells that was first introduced by Kropff and Treves in 2008 ([1],[2]). We simulate a rat exploring a square environment at constant speed and model the development of grid cell activity in a population of neurons receiving spacially tuned feed forward imput. 
  
 
 \section{Introduction}
-There are various types of neurons that serve to encode an animals spatial location. Place cells - located in hippocampus - were discovered in the 1970s by O'Keefe and Dostrovsky. Place cells show increased activity when the animal enters a specific region of the environment - the so called place field.\newline
-Grid cells - located in medial entorhinal cortex (mEC) were then discovered in 2005. In contrast to place cells they are activated at various locations and their firing maps show a characteristic hexagonal grid pattern. Different grid cells can be distinguished by their spacing, orientation and spatial phases. Neighboring grid cells usually show similar and orientation. \newline
-It is assumed that grid cells perform a path integration task, taking into account the rats position, speed and direction. Visual information on the other hand plays at most a secondary role in the formation of the grid pattern. \newline
-The Kropff and Treves model assumes places cells as the basis for grid cell development. The place cells take as input the $x$ and $y$ coordinates of a virtual rat exploring a square environment of 125cm length. Every output unit then receives input from all place cells and the weights connecting input and output neurons are updated by a Hebbian learning rule. 
+Different types of neurons encode the spatial location of an animal. Place cells - located in hippocampus - were discovered in the 1970s by O'Keefe and Dostrovsky [3], they show increased activity when the animal enters a specific region of the environment - the so called place field.\newline
+Grid cells - located in medial entorhinal cortex (mEC) were then discovered in 2005[4]. In contrast to place cells, grid cells are activated at multiple locations and their firing maps show a characteristic hexagonal grid pattern. Grid cells can be characterized by a spacing, an orientation and a spatial phases. Neighboring grid cells show similar and orientation. \newline
+It was proposed that grid cells perform a path integration task, taking into account the rats current position, its running speed and direction of movement. Sensual information, on the other hand, was attributed a secondary role in the formation of the grid patterns[5]. \newline
 %
 %
 %
 \section{Model}
-The model consists of a layer of 400 input neurons (simulating place cells) and 100 ouput neurons (simulation grid cells), every unit of the input layer being connected to every unit of the output layer. By $w_{ij}$ we denote the weight of the connection between the $j$-th input unit and the $i$-th output unit. 
-\begin{figure}
-\includegraphics[width=0.5\textwidth]{pics/model_overview.png}
-\end{figure}
-\subsection{Spatial Information}
+The Kropff and Treves model assumes places cells as the basis for grid cell development. In our implementation the model consists of a layer of 400 input neurons (simulating place cells) and 100 ouput neurons (simulation grid cells), every unit of the input layer being connected to every unit of the output layer. At each timestep the place cells recieve spacially tuned input encoding the rats current position. Every output unit then receives input from all place cells and the weights connecting input and output neurons are updated by a Hebbian learning rule. 
+
+%\begin{figure}
+%\includegraphics[width=0.5\textwidth]{pics/model_overview.png}
+%\end{figure}
+\subsection{Spacial exploration}
 \begin{figure}[h]
-\begin{minipage}{0.5\textwidth}
-	\includegraphics[width=5cm, height=5cm]{running_rat.png}
+\begin{minipage}{0.4\textwidth}
+	\includegraphics[width=6cm, height=6cm]{pics/running_rat.png}
 	\caption{\footnotesize{trajectory of the virtual rat exploring for 50 seconds}}
 \end{minipage}
-\begin{minipage}{0.5\textwidth}
-To create the spatial coordinates that serve as input for the first layer of neurons, we simulate a rat exploring a square environment of size 125cm $\times$ 125cm at a speed of 0.4 m/s. At each timestep $\tau=$10ms we chose a new direction by randomly drawing an angle $\phi$ from a normal distribution, which is centered around the direction at the prvious timestep and has a standard deviation of 0.2rad.   
+\begin{minipage}{0.6\textwidth}
+To create the spatial coordinates that serve as input for the first layer of neurons, we simulate a rat exploring a square environment of size 125 cm $\times$ 125 cm at a speed of 0.4 m/s. At each timestep $\tau=$10 ms we chose a new direction by randomly drawing an angle $\phi$ from a normal distribution, which is centered around the direction at the prvious timestep and has a standard deviation of 0.2 rad.   
 \end{minipage}
 \end{figure}
 
 
 \subsection{Input layer}
-The input layer consists of 400 place units processing information about the rats location $\boldsymbol{x}(t)$ at a given time $t$. The firing $r_j^{in}(t)$ of each place unit is modeled by an exponential function centered around the cells prefered location $\boldsymbol{x}_j$. The respective fireing field's width is $\sigma_p=$ 5cm. 
+The input layer consists of 400 place units processing information about the rats location $\boldsymbol{x}(t)$ at a given time $t$ (see figure \ref{input}). The firing $r_j^{in}(t)$ of each place unit is modeled by a gaussian function centered around the cell's preferred location $\boldsymbol{x}_j$. The width of the firing field is denoted by $\sigma_p=$ 5 cm. 
 	\begin{equation}
 	r_j^{in}(t)=\exp\left(\frac{-|\boldsymbol{x}^t-\boldsymbol{x}_j|}{2\sigma_p^2}\right)
 	\end{equation}
-\begin{figure}[h]
+In figure 2 we can see the activation of input layer neurons as the rat explores a small section of the environment:  
+
+\begin{figure}[h]\label{input}
 \setlength{\abovecaptionskip}{5pt}
 \setlength{\belowcaptionskip}{0pt}
 \begin{minipage}[t]{0.3\textwidth}\vspace{0pt}
@@ -71,32 +73,33 @@ The input layer consists of 400 place units processing information about the rat
 \begin{minipage}[t]{0.3\textwidth}\vspace{0pt}
 \includegraphics[width=5cm, height=5cm]{pics/activity_demo}
 \end{minipage}
-\caption{\footnotesize{From left to right: (i) distribution of place fields across the environment, (ii) trajectory of the virtual rat and (iii) corresponding activity of place cells.}}
+\caption{\footnotesize{From left to right: (i) Distribution of place fields across the environment, (ii) Trajectory of the virtual rat and (iii) Activity of place cells summed over exploring time. Each pixel corresponds to one place cell (arranged as in (i)).}}
 \end{figure}
+\newpage
 %
 %
 %	
 \subsection{Output layer}
-At each timestep every output unit recieves as input a weighted sum $h$ of the activations of all place cells. For the $i$-th output unit this takes the form: 
+At each timestep output unit $i$ recieves as input a weighted sum $h_i$ of the place cell activity: 
 	\begin{equation}
 	h_i(t)=\sum_jw_{ij}r_j^{in}(t).
 	\end{equation}
-This input is then subject to an dynamic adaptaion process, during which we also determine parameters $g$ and $\mu$ which control the mean firing activity across neuons as well as the sparsity. To calculate the final output $r_i^{out}(t)$, we then use a nonlinear activation function:
-	\begin{equation}
-	r_i^{out}(t) = f(r^+(h_i(t)); g,\mu).
-	\end{equation}
-
-\noindent The crucial point for the developement of grid cells is that we do not directly use the value $h_i(t)$ to calculate the output laver activity but first subject it to the following adaptation process: 
+$h_i(t)$ is then subject to an dynamic adaptation process involving the activation variable $r^+$ and the inactivation variable $r^-$. The speed of the adapation is governed by the time constants $\tau^+=0.1 s$ and $\tau^-=0.3 s$:
 	\begin{eqnarray}
 	\tau^+\frac{d}{dt}r^+ &=& h_i(t)-r^+(t)-r^-(t)\\
 	\tau^-\frac{d}{dt}r^- &=& h_i(t)-r^-(t)
 	\end{eqnarray}
-The control parameters $g$ and $\mu$ are determined by itereation. $g$ serves to keep the mean activity across neurons - defined via $a= \frac{1}{400}\sum_ir_i^{out}$- within a 10\%-range from the value $a_0$. The parameter $\mu$ respectively controls the sparsity $s=\frac{(\sum_ir_i^{out})^2}{\frac{1}{400}\sum_i (r_i^{out})^2}$ and keeps it within a 10\% error bound of the value $s_0$. At each iteration step $g$ and $\mu$ are updated in the following way: 
+The varaible $r^+$ is then used to calculate the final output via the following activation function: 
+	\begin{equation}
+	r_i^{out}(t)=\frac{2}{\pi}\arctan(g(r_i^+(t)-\mu))\Theta( r_i^+(t)-\mu)
+	\end{equation}
+The factor $\frac{2}{\pi}$ serves to normalize the output to a value between 0 and 1 and the Heaviside step-function $\Theta$ ensures the positiveness of all output values.  \newline
+The two control parameters $g$ and $\mu$ are the gain and the threshold of the system. $g$ serves to keep the mean activity across neurons - defined via $a= \frac{1}{N}\sum_ir_i^{out}$- within a 10\%-range from the value $a_0$. The parameter $\mu$ respectively controls the sparsity $s=\frac{(\sum_ir_i^{out})^2}{\frac{1}{N}\sum_i (r_i^{out})^2}$ and keeps it within a 10\% error bound of the value $s_0$. In both above expressions the parameter $N$ denotes the number of output neuorns. $g$ and $\mu$ determined by an optimization algorithm are updated in the following way: 
 	\begin{eqnarray}
 	\mu^{t, l+1} &=& \mu^{t,l}+b_\mu(a^{l}-a_0)\\
 	g^{t,l+1} &=& g^{t,l}+ b_gg^{t,l}(s^l-s_0)
 	\end{eqnarray}
-\noindent $l$ indicates the step of the iteration. The updating process is stopped if both $a$ and $s$ fall within the 10 \% error bound of $a_0$ and $s_0$. In any case the updating process stops after 100 iterations. 
+\noindent $l$ indicates the step of the iteration. The updating process is stopped if both $a$ and $s$ fall within the 10 \% error bound of $a_0$ and $s_0$ or when an upper bound of 100 iterations is reached. 
 	
 \begin{figure}[h]
 \setlength{\abovecaptionskip}{5pt}
@@ -107,34 +110,28 @@ The control parameters $g$ and $\mu$ are determined by itereation. $g$ serves to
 	\end{minipage}
 \hfill
 	\begin{minipage}[t]{0.5\textwidth}\vspace{20pt}
-	\begin{tabular}{c|cccccccc}
-	& $a_0$ & $s_0$ & $\mu^{0,0}$ & $g^{0,0}$ & $b_\mu$ & $b_g$& $\tau^+$ & $\tau^-$\\
+	\begin{tabular}{c|cccccc}
+	& $a_0$ & $s_0$ & $\mu^{0,0}$ & $g^{0,0}$ & $b_\mu$ & $b_g$\\
 	\hline\\
-	& 0.1 & 0.3 & 0 & 4.5 & 0.01 & 0.1& 0.1 & 0.3\\
+	& 0.1 & 0.3 & 0 & 4.5 & 0.01 & 0.1\\
 	\end{tabular}
-	\caption{\footnotesize{Default parameters for adaptation dynamics}}
+	\captionof{table}{\footnotesize{Default parameters for adaptation dynamics}}
 	\end{minipage}
 \end{figure}	
-
-\noindent Using the above introduced expressions we can now write down the activation function in its complete form: 
-	\begin{equation}
-	r_i^{out}(t)=\frac{2}{\pi}\arctan(g(r_i^+(t)-\mu))\Theta( r_i^+(t)-\mu)
-	\end{equation}
-The factor $\frac{2}{\pi}$ serves to normalize the output to a value between 0 and 1 while the Heaviside step-function $\Theta$ makes sure that we only recieve positive output-values. 
 %
 %
 %
 \subsection{Weights}
-The weights connecting input and output layer are initially being drawn from a uniform distribution in $[0,1]$ and normalized to unity i.e. for every output unit $i$ we impose $\sum_jw_{ij}=1$. At each timestep the weights are then updated using a Hebbian learning rule:  
+The weights between the input and the output layer are initially being drawn from a uniform distribution in $[0,1]$ and normalized to unit norm i.e. for every output unit $i$ we impose $\sum_jw^2_{ij}=1$. At each timestep of the simulation the weights are then updated using a Hebbian learning rule:  
 \begin{equation}
-w_{ij}(t+\Delta t)= w_{ij}(t)+ \epsilon(r_i^{out}(t)r_j^{in}(t)-\overline{r}_i^{out}(t)\overline{r}_j^{in}(t))
+w_{ij}(t+\Delta t)= w_{ij}(t)+ \epsilon(r_i^{out}(t)r_j^{in}(t)-\overline{r}_i^{out}(t)\overline{r}_j^{in}(t)),
 \end{equation}
-here  $\epsilon= 0.005$ is a moderate learning rate and $\overline{r}_i^{out}(t)$ and $\overline{r}_j^{in}(t)$ are the  running averages of input and output firing rates. Using a time averaging factor $\eta=0.05$ we calcualte these averages via: 
+where $w_{ij}$ denotes the weight of the connection between the $j$-th input unit and the $i$-th output unit. $\epsilon= 0.005$ is a moderate learning rate and $\overline{r}_i^{out}(t)$ and $\overline{r}_j^{in}(t)$ are the  running averages of input and output firing rates.  
 	\begin{eqnarray}
 	\overline{r}_i^{out}(t) &=& \overline{r}_i^{out}(t-1)+ \eta(r_i^{out}(t)-\overline{r}_i^{out}(t-1))\\
 	\overline{r}_j^{in}(t) &=& \overline{r}_j^{in}(t-1)+ \eta(r_j^{in}(t)-\overline{r}_j^{in}(t-1))
 	\end{eqnarray}
-After each update the weights are again normalized to unit norm. 
+where $\eta=0.05$ sets the time averaging constant. After each update the weights are kept normalized to unit norm. 
 %
 %
 \section{Results}
@@ -174,12 +171,22 @@ When all grid cells are inspected, it is seen that most grid cells have similar 
 \caption{Different grid cells have different orientations and off-sets but similar spatial frequencies.}
 \label{diff}
 \end{figure}
+%
+%
+%
 
+\newpage
 \section{References}
 \begin{enumerate}
-\item Emilio Kropff and Alessandro Treves, \textit{The Emergence of Grid Cells: Intelligent Design or Just Adaptation?}, Hippocampus 18:1256-1269 (2008).
+\item E.Kropff and A.Treves, \textit{The Emergence of Grid Cells: Intelligent Design or Just Adaptation?}, Hippocampus 18: 1256-1269 (2008).
 
-\item Si, Bailu, Emilio Kropff, and Alessandro Treves. \textit{Grid alignment in entorhinal cortex.} Biological cybernetics 106.8-9 (2012).
+\item B. Si, E. Kropff, and A. Treves, \textit{Grid alignment in entorhinal cortex.} Biological cybernetics 106: 8-9 (2012).
+
+\item J. O'Keefe and J.Dostrovsky,\textit{The hippocampus as a spatial map. Preliminary evidence from unit activity in the freely-moving rat.} Brain Res. 34:171-175 (1971). 
+
+\item T. Hafting, M. Fyhn, S. Molden, M.-B. Moser and E.I.Moser,\textit{Microstructure of a spatial map in the entorhinal cortex.} Nature 436: 801-806 (2005).
+
+\item JS.Barlow,\textit{Inertial navigation as a basis for animal navigation.} J Theor Biol. 6:  76-117 (1964)
 \end{enumerate}
 
 
