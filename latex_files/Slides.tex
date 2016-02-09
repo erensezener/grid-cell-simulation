@@ -47,24 +47,24 @@ In Hippocampus and the medial enthorhinal cortex (mEC) various types of neurons 
 % 
 %
 %
-\begin{frame}
-\frametitle{Cells encoding spacial location}
-\begin{itemize}
-\item \textbf{Place cells} \newline
-%Located in hippocampus. Activated when the animal enters a specific region of the environment - the \textit{place field]}. \newline
-%\includegraphics[width=0.33\textwidth]{Place_Cell_Spiking_Activity_Example.png}
-%"Place Cell Spiking Activity Example" by Stuartlayton at English Wikipedia. Licensed under CC BY-SA 3.0 via Commons - https://commons.wikimedia.org/wiki/File:Place_Cell_Spiking_Activity_Example.png#/media/File:Place_Cell_Spiking_Activity_Example.png
-\item \textbf{Grid cells} \newline
-%Located in  medial enthorhinal cortex (mEC). Activated at several spacial positions. The firing map shows an equally spaced hexagonal pattern. \newline
-\item \textbf{Head-direction cells}\newline
-\item \textbf{Head-Grid-Conjunctive cells}
-\end{itemize}
-\end{frame}
+%\begin{frame}
+%\frametitle{Cells encoding spacial location}
+%\begin{itemize}
+%\item \textbf{Place cells} \newline
+%%Located in hippocampus. Activated when the animal enters a specific region of the environment - the \textit{place field]}. \newline
+%%\includegraphics[width=0.33\textwidth]{Place_Cell_Spiking_Activity_Example.png}
+%%"Place Cell Spiking Activity Example" by Stuartlayton at English Wikipedia. Licensed under CC BY-SA 3.0 via Commons - https://commons.wikimedia.org/wiki/File:Place_Cell_Spiking_Activity_Example.png#/media/File:Place_Cell_Spiking_Activity_Example.png
+%\item \textbf{Grid cells} \newline
+%%Located in  medial enthorhinal cortex (mEC). Activated at several spacial positions. The firing map shows an equally spaced hexagonal pattern. \newline
+%\item \textbf{Head-direction cells}\newline
+%\item \textbf{Head-Grid-Conjunctive cells}
+%\end{itemize}
+%\end{frame}
 %
 %
 %
 \begin{frame}
-\frametitle{Properties of place cells}
+\frametitle{Place cells}
   \begin{columns}[T]
     \begin{column}{.5\textwidth}
 			Located in hippocampus. Activated when the animal enters a specific region of the environment - the \textit{place field}.
@@ -73,26 +73,30 @@ In Hippocampus and the medial enthorhinal cortex (mEC) various types of neurons 
     \includegraphics[width=0.9\textwidth]{Place_Cell_Spiking_Activity_Example.png}
     \end{column}
   \end{columns}	
+
+  {\small Reference: \newline
+  J. O'Keefe and J.Dostrovsky,\textit{The hippocampus as a spatial map. Preliminary evidence from unit activity in the freely-moving rat.} Brain Res. 34:171-175 (1971). }
 \end{frame}
 %
 %
 %
 \begin{frame}
-\frametitle{Properties of grid cells}
+\frametitle{Grid cells}
 \begin{columns}[T]
     \begin{column}{.5\textwidth}
 			\begin{itemize}
-			\item Located in  medial enthorhinal cortex (mEC). Activated at several spacial positions. The firing map shows an equally spaced hexagonal pattern. 
-			%\item Perform path integration i.e. process information about location, direction, speed
+			\item Located in  medial enthorhinal cortex (mEC). Activated at multiple spacial positions. 
+			\item Firing map shows hexagonal pattern. 
 			\item Mostly independent of visual stimulus
-			\item Different grid cells show different spacing, orientation and size of their patterns.
-			\item Spacing from 25cm to 3m. 
+			\item Spacing, orientation, size of  patterns.
 			\end{itemize}
     \end{column}
     \begin{column}{.5\textwidth}
     \includegraphics[width= 0.9\textwidth]{RatRunningPath.JPG}
     \end{column}
-  \end{columns}	
+  \end{columns}
+ {\small Reference: \newline
+ T. Hafting, M. Fyhn, S. Molden, M.-B. Moser and E.I.Moser,\textit{Microstructure of a spatial map in the entorhinal cortex.} Nature 436: 801-806 (2005).	}
 \end{frame}
 %
 %
@@ -105,7 +109,6 @@ In Hippocampus and the medial enthorhinal cortex (mEC) various types of neurons 
 			\begin{itemize}
 		    \item Square environment of size $125 \times 125$ cm.
 		    \item Speed: $v=0.4$ m/s
-		    \item Initialization with random position
 		    \item Every 10ms: chose new direction from a gaussian distribution with 
 		    	\begin{itemize}
 		    	\item $\mu=$ previous direction
@@ -114,8 +117,8 @@ In Hippocampus and the medial enthorhinal cortex (mEC) various types of neurons 
 		    \end{itemize}
     \end{column}
     \begin{column}{.5\textwidth}
-    \includegraphics[width=6cm]{running_rat.png}
-    %\caption{running time: 5 seconds}
+    \includegraphics[width=6cm, height=6cm]{pics/running_rat.png}
+    %\caption{running time: 50 seconds}
     \end{column}
   \end{columns}
 \end{frame}
