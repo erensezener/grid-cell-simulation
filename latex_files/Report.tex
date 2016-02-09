@@ -26,7 +26,7 @@
 \maketitle
 
 \paragraph{Abstract:}
-Grid cells, located in rats medial entorhinal cortex (mEC), show increased firing activity when the animal enters specific regions of the environment and their firing maps show a characteristic hexagonal grid pattern. In our project we implement a computational model for the development of grid cells that was first introduced by Kropff and Treves in 2008 ([1],[2]). We simulate a rat exploring a square environment at constant speed and model the development of grid cell activity in a population of neurons receiving spacially tuned feed forward imput. 
+Grid cells, located in rats medial entorhinal cortex (mEC), show increased firing activity when the animal enters specific regions of the environment and their firing maps show a characteristic hexagonal grid pattern. In our project we implement a computational model for the development of grid cells that was first introduced by Kropff and Treves in 2008 ([1],[2]). We simulate a rat exploring a square environment at constant speed and model the development of grid cell activity in a population of neurons receiving spatially tuned feed forward imput. 
  
 
 \section{Introduction}
@@ -37,7 +37,7 @@ It was proposed that grid cells perform a path integration task, taking into acc
 %
 %
 \section{Model}
-The Kropff and Treves model assumes places cells as the basis for grid cell development. In our implementation the model consists of a layer of 400 input neurons (simulating place cells) and 100 output neurons (simulation grid cells). Every unit of the input layer is connected to every unit of the output layer. This is schematically visulaized in figure \ref{overview}. At each time step the place cells receive spatially tuned input encoding the rat's current position. Every output unit then receives input from all place cells and the weights connecting input and output neurons are updated by a Hebbian learning rule. 
+The Kropff and Treves model assumes places cells as the basis for grid cell development. In our implementation the model consists of a layer of 400 input neurons (simulating place cells) and 100 output neurons (simulation grid cells). Every unit of the input layer is connected to every unit of the output layer. This is schematically visualized in figure \ref{overview}. At each time step the place cells receive spatially tuned input encoding the rat's current position. Every output unit then receives input from all place cells and the weights connecting input and output neurons are updated by a Hebbian learning rule. 
 
 \begin{center}
 \begin{figure}\label{overview}
@@ -55,12 +55,12 @@ The Kropff and Treves model assumes places cells as the basis for grid cell deve
 	\footnotesize{\caption{trajectory of the virtual rat exploring for 50 seconds}}
 \end{minipage}
 \begin{minipage}{0.6\textwidth}
-To create the spatial coordinates that serve as input for the first layer of neurons, we simulate a rat exploring a square environment of size 125 cm $\times$ 125 cm at a speed of 0.4 m/s. At each time step $\tau=$10 ms we chose a new direction by randomly drawing an angle $\phi$ from a normal distribution, which is centred around the direction at the previous time step and has a standard deviation of 0.2 rad.   
+To create the spatial coordinates that serve as input for the first layer of neurons, we simulate a rat exploring a square environment of size 125 cm $\times$ 125 cm at a speed of 0.4 m/s. At each time step $\tau=$10 ms we chose a new direction by randomly drawing an angle $\phi$ from a normal distribution, which is centered around the direction at the previous time step and has a standard deviation of 0.2 rad.   
 \end{minipage}
 \end{figure}
 
 \subsection{Input layer}
-The input layer consists of 400 place units processing information about the rats location $\boldsymbol{x}(t)$ at a given time $t$ (see figure \ref{input}). The firing $r_j^{in}(t)$ of each place unit is modelled by a Gaussian function centred around the cell's preferred location $\boldsymbol{x}_j$. The width of the firing field is denoted by $\sigma_p=$ 5 cm. 
+The input layer consists of 400 place units processing information about the rats location $\boldsymbol{x}(t)$ at a given time $t$ (see figure \ref{input}). The firing $r_j^{in}(t)$ of each place unit is modeled by a Gaussian function centred around the cell's preferred location $\boldsymbol{x}_j$. The width of the firing field is denoted by $\sigma_p=$ 5 cm. 
 	\begin{equation}
 	r_j^{in}(t)=\exp\left(\frac{-|\boldsymbol{x}^t-\boldsymbol{x}_j|}{2\sigma_p^2}\right)
 	\end{equation}
@@ -93,7 +93,7 @@ By $w_{ij}$ we denote the weight of the connection from the $j$-th input unit to
 	\tau^+\frac{d}{dt}r^+_i &=& h_i(t)-r^+_i(t)-r^-_i(t)\\
 	\tau^-\frac{d}{dt}r^-_i &=& h_i(t)-r^-_i(t)
 	\end{eqnarray}
-In order to understand the dynamics of this system of differential equations, consider a sinusoidal input of $h_i(t) = \sin(\pi k t^2)$. Figure \ref{adaptation} shows the numerical solution of $r^+_i$ in that case plottet versus the frequency of the input $kt$. The plot shows that there is a resonance frequency of about $0.92 \frac{1}{s}$, where the activation $r^+_i$ is maximal.
+In order to understand the dynamics of this system of differential equations, consider a sinusoidal input of $h_i(t) = \sin(\pi k t^2)$. Figure \ref{adaptation} shows the numerical solution of $r^+_i$ in that case plotted versus the frequency of the input $kt$. The plot shows that there is a resonance frequency of about $0.92 \frac{1}{s}$, where the activation $r^+_i$ is maximal.
 \begin{figure}[h]
 	\begin{center}
 	\includegraphics[width=6cm, height=6cm]{pics/sinusoidal_activation}
@@ -146,24 +146,27 @@ $\epsilon= 0.005$ is a moderate learning rate and $\overline{r}_i^{out}(t)$ and 
 $\eta=0.05$ sets the time averaging constant. After each update the weights are kept normalized to unit norm. 
 %
 %
-\section{Results}
-We ran the simulation for 2.5 hours in rat time. The results show that this duration is sufficient for grid cells to develop. Figure \ref{time-evol} shows the time evolution of weights of a grid cell. The cell we picked has one of the most apparent grid structure among the other cells.
+
+\section{Results and Discussion}
+After 2.5 hours of simulation, some of the output units show grid-like receptive fields. This structure is more apparent in autocorrelograms, where the hexagonal grid structure is easy to see Figure \ref{LabelB}. Figure \ref{time-evol} shows the time evolution of the weights of one output unit.
+
+%We ran the simulation for 2.5 hours, where the virtual rat explored the environment. The results show that this duration is sufficient for grid cells to develop. Figure \ref{time-evol} shows the time evolution of the weights of one output unit.
 
 %\subsection{Time evolution}
 \begin{figure}[htbp]
 \begin{minipage}[hbt]{0,49\textwidth}
         \centering
-\includegraphics[width=6cm,height=6cm]{neurons/neuron_w_41_t_0.png}\\[10pt]
-\includegraphics[width=6cm,height=6cm]{neurons/neuron_w_41_t_50.png} \\[10pt]
-\includegraphics[width=6cm,height=6cm]{neurons/neuron_w_41.png}
+\includegraphics[width=6cm,height=6cm]{neurons/neuron_w_20_t_0.png}\\[10pt]
+\includegraphics[width=6cm,height=6cm]{neurons/neuron_w_20_t_50.png} \\[10pt]
+\includegraphics[width=6cm,height=6cm]{neurons/neuron_w_20.png}
         \caption{weight development}
         \label{LabelA}
 \end{minipage}
 \begin{minipage}[hbt]{0,49\textwidth}
         \centering
-\includegraphics[width=6cm,height=6cm]{neurons/neuron_a_41_t_0.png}\\[10pt]
-\includegraphics[width=6cm,height=6cm]{neurons/neuron_a_41_t_50.png}\\[10pt]
-\includegraphics[width=6cm,height=6cm]{neurons/neuron_a_41.png}
+\includegraphics[width=6cm,height=6cm]{neurons/neuron_a_20_t_0.png}\\[10pt]
+\includegraphics[width=6cm,height=6cm]{neurons/neuron_a_20_t_50.png}\\[10pt]
+\includegraphics[width=6cm,height=6cm]{neurons/neuron_a_20.png}
         \caption{autocorrellation development}
         \label{LabelB}
 \end{minipage}
@@ -172,7 +175,8 @@ We ran the simulation for 2.5 hours in rat time. The results show that this dura
 \label{time-evol}
 \end{figure}
 
-When all grid cells are inspected, it is seen that most grid cells have similar spatial frequencies, however, their orientations and off-sets are different. Figure \ref{diff} illustrates this difference. 
+It can be seen that most grid cells have similar spatial frequencies, however, their orientations and off-sets are different. Figure \ref{diff} illustrates this difference. However, not all output units developed grid-like RFs. This might be due to the fact that  we ran simulation for a shorter duration than what is suggested in the paper, which is 10 hours.
+
 
 \begin{figure}
 \hfill
@@ -183,9 +187,27 @@ When all grid cells are inspected, it is seen that most grid cells have similar 
 \caption{Different grid cells have different orientations and off-sets but similar spatial frequencies.}
 \label{diff}
 \end{figure}
+
+\begin{figure}
+\hfill
+\subfigure{\includegraphics[width=6cm]{neurons/neuron_w_20.png}}
+\hfill
+\subfigure{\includegraphics[width=6cm]{neurons/neuron_r_20.png}}
+\hfill
+\caption{The final weights and expected firing rates of an output unit}
+\label{diff}
+\end{figure}
 %
 %
 %
+
+%\section{Discussion}
+
+The model for grid cell development that we implemented is rather simplistic in the sense, that the only information used is the activity of the place cells. Nevertheless Kropff and Treves showed in 2012 [2] that better results may be archived by also taking into account information about head direction. 
+
+Furthermore, the Kropff and Treves model doesn't have collateral weights. Competition is implemented by regulating the mean activity and it sparsity. A more biologically realistic model would include collateral weights that mimic inhibitory connections between grid cells [2]. 
+
+Lastly, it is not clear if grid cells are formed based on projections from place cells. The reverse might be true as well.
 
 \newpage
 \section{References}
