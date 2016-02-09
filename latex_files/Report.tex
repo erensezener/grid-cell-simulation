@@ -37,25 +37,30 @@ It was proposed that grid cells perform a path integration task, taking into acc
 %
 %
 \section{Model}
-The Kropff and Treves model assumes places cells as the basis for grid cell development. In our implementation the model consists of a layer of 400 input neurons (simulating place cells) and 100 output neurons (simulation grid cells). Every unit of the input layer is connected to every unit of the output layer. At each time step the place cells receive spatially tuned input encoding the rat's current position. Every output unit then receives input from all place cells and the weights connecting input and output neurons are updated by a Hebbian learning rule. 
+The Kropff and Treves model assumes places cells as the basis for grid cell development. In our implementation the model consists of a layer of 400 input neurons (simulating place cells) and 100 output neurons (simulation grid cells). Every unit of the input layer is connected to every unit of the output layer. This is schematically visulaized in figure \ref{overview}. At each time step the place cells receive spatially tuned input encoding the rat's current position. Every output unit then receives input from all place cells and the weights connecting input and output neurons are updated by a Hebbian learning rule. 
 
-%\begin{figure}
-%\includegraphics[width=0.5\textwidth]{pics/model_overview.png}
-%\end{figure}
+\begin{center}
+\begin{figure}\label{overview}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{pics/model_overview.png}
+\footnotesize{\caption{The feed-forward network (showing only a subset of the nodes and only all connections from one input node and to one output node)}}
+\end{center}
+\end{figure}
+\end{center}
+
 \subsection{Spatial exploration}
 \begin{figure}[h]
 \begin{minipage}{0.4\textwidth}
 	\includegraphics[width=6cm, height=6cm]{pics/running_rat.png}
-	\caption{\footnotesize{trajectory of the virtual rat exploring for 50 seconds}}
+	\footnotesize{\caption{trajectory of the virtual rat exploring for 50 seconds}}
 \end{minipage}
 \begin{minipage}{0.6\textwidth}
 To create the spatial coordinates that serve as input for the first layer of neurons, we simulate a rat exploring a square environment of size 125 cm $\times$ 125 cm at a speed of 0.4 m/s. At each time step $\tau=$10 ms we chose a new direction by randomly drawing an angle $\phi$ from a normal distribution, which is centred around the direction at the previous time step and has a standard deviation of 0.2 rad.   
 \end{minipage}
 \end{figure}
 
-
 \subsection{Input layer}
-The input layer consists of 400 place units processing information about the rats location $\boldsymbol{x}(t)$ at a given time $t$ (see figure \ref{input}). The firing $r_j^{in}(t)$ of each place unit is modelled  by a Gaussian function centred around the cell's preferred location $\boldsymbol{x}_j$. The width of the firing field is denoted by $\sigma_p=$ 5 cm. 
+The input layer consists of 400 place units processing information about the rats location $\boldsymbol{x}(t)$ at a given time $t$ (see figure \ref{input}). The firing $r_j^{in}(t)$ of each place unit is modelled by a Gaussian function centred around the cell's preferred location $\boldsymbol{x}_j$. The width of the firing field is denoted by $\sigma_p=$ 5 cm. 
 	\begin{equation}
 	r_j^{in}(t)=\exp\left(\frac{-|\boldsymbol{x}^t-\boldsymbol{x}_j|}{2\sigma_p^2}\right)
 	\end{equation}
@@ -75,21 +80,28 @@ In figure 2 we can see the activation of input layer neurons as the rat explores
 \end{minipage}
 \caption{\footnotesize{From left to right: (i) Distribution of place fields across the environment, (ii) Trajectory of the virtual rat and (iii) Activity of place cells summed over exploring time. Each pixel corresponds to one place cell (arranged as in (i)).}}
 \end{figure}
-\newpage
 %
 %
 %	
 \subsection{Output layer}
-At each time step output unit $i$ receives as input a weighted sum $h_i$ of the place cell activity: 
+At each time step output unit $i$ receives as input a weighted sum $h_i$ of the place cell activities: 
 	\begin{equation}
 	h_i(t)=\sum_jw_{ij}r_j^{in}(t).
 	\end{equation}
-by $w_{ij}$ we denote the weight of the connection from the $j$-th input unit to the $i$-th output unit. $h_i(t)$ is then subject to an dynamic adaptation process involving the activation variable $r^+$ and the inactivation variable $r^-$. The speed of the adaptation is governed by the time constants $\tau^+=0.1$ s and $\tau^-=0.3$ s:
+By $w_{ij}$ we denote the weight of the connection from the $j$-th input unit to the $i$-th output unit. $h_i(t)$ is then subject to an dynamic adaptation process involving the activation variable $r^+$ and the inactivation variable $r^-$. The speed of the adaptation is governed by the time constants $\tau^+=0.1$ s and $\tau^-=0.3$ s:
 	\begin{eqnarray}
-	\tau^+\frac{d}{dt}r^+ &=& h_i(t)-r^+(t)-r^-(t)\\
-	\tau^-\frac{d}{dt}r^- &=& h_i(t)-r^-(t)
+	\tau^+\frac{d}{dt}r^+_i &=& h_i(t)-r^+_i(t)-r^-_i(t)\\
+	\tau^-\frac{d}{dt}r^-_i &=& h_i(t)-r^-_i(t)
 	\end{eqnarray}
-The variable $r^+$ is then used to calculate the final output via the following activation function: 
+In order to understand the dynamics of this system of differential equations, consider a sinusoidal input of $h_i(t) = \sin(\pi k t^2)$. Figure \ref{adaptation} shows the numerical solution of $r^+_i$ in that case plottet versus the frequency of the input $kt$. The plot shows that there is a resonance frequency of about $0.92 \frac{1}{s}$, where the activation $r^+_i$ is maximal.
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=6cm, height=6cm]{pics/sinusoidal_activation}
+	\footnotesize{\caption{numerical solution of adaptation dynamics for sinusoidal input}}
+	\end{center}
+\end{figure}
+
+\noindent The variable $r^+$ is then used to calculate the final output via the following activation function: 
 	\begin{equation}
 	r_i^{out}(t)=\frac{2}{\pi}\arctan(g(r_i^+(t)-\mu))\Theta( r_i^+(t)-\mu).
 	\end{equation}
@@ -106,7 +118,7 @@ The two control parameters $g$ and $\mu$ are the gain and the threshold of the s
 \setlength{\belowcaptionskip}{0pt}	
 	\begin{minipage}[t]{0.5\textwidth}\vspace{0pt}
 	\includegraphics[width=5cm, height=4cm]{pics/output_function.png}
-	\caption{\footnotesize{Activation function for output neurons}}
+	\footnotesize{\caption{Activation function for\\ output neurons}}
 	\end{minipage}
 \hfill
 	\begin{minipage}[t]{0.5\textwidth}\vspace{20pt}
@@ -115,7 +127,7 @@ The two control parameters $g$ and $\mu$ are the gain and the threshold of the s
 	\hline\\
 	& 0.1 & 0.3 & 0 & 4.5 & 0.01 & 0.1\\
 	\end{tabular}
-	\captionof{table}{\footnotesize{Default parameters for adaptation dynamics}}
+	\footnotesize{\captionof{table}{Default parameters for adaptation dynamics}}
 	\end{minipage}
 \end{figure}	
 %
