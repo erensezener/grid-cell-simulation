@@ -1,35 +1,46 @@
+%\begin{frame}
+%\frametitle{Model: Overview}
+%\begin{center}
+%\begin{tikzpicture}[->]
+%	% draw input layer
+%	\foreach \s in {0,...,7}
+%	{
+%		\node[draw, circle] (i_\s) at (0,-\s * 0.5) {};
+%	}
+%	
+%	% draw output layer	
+%	\foreach \s in {0,...,2}
+%	{
+%		\node[draw, circle] (o_\s) at (3,-1.25 -\s * 0.5) {};
+%		\node (m_\s) at (5,-1.25 -\s * 0.5) {};
+%		\path (o_\s) edge node {} (m_\s);
+%	}
+%	
+%	% draw edges
+%	\foreach \s in {0,...,7}
+%	{
+%			\path (i_\s) edge node {} (o_0);
+%	}
+%	\path (i_0) edge node {} (o_1);
+%	\path (i_0) edge node {} (o_2);
+%
+%	% draw underbraces and labels
+%	\node[] (l_0) at (0,-4) {$\underbrace{\ }$};
+%	\node[] (l_0) at (0,-4.5) {\scriptsize{input layer}};
+%	\node[] (l_0) at (1.5,-4) {$\underbrace{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }$};
+%	\node[] (l_0) at (1.5,-4.5) {\scriptsize{weights}};
+%	\node[] (l_0) at (3,-4) {$\underbrace{\ }$};
+%	\node[] (l_0) at (3,-4.5) {\scriptsize{output layer}};
+%\end{tikzpicture}
+%\end{center}
+%\end{frame}
+
 \begin{frame}
 \frametitle{Model: Overview}
 \begin{center}
-input layer output layer magic processing output
-\begin{tikzpicture}[->]
-
-	% draw input layer
-	\foreach \s in {0,...,7}
-	{
-		\node[draw, circle] (i_\s) at (0,-\s * 0.5) {};
-	}
-	
-	% draw output layer	
-	\foreach \s in {0,...,2}
-	{
-		\node[draw, circle] (o_\s) at (3,-1.25 -\s * 0.5) {};
-		\node (m_\s) at (5,-1.25 -\s * 0.5) {};
-		\path (o_\s) edge node {} (m_\s);
-	}
-	
-	% draw edges
-	\foreach \s in {0,...,7}
-	{
-			\path (i_\s) edge node {} (o_0);
-	}
-	\path (i_0) edge node {} (o_1);
-	\path (i_0) edge node {} (o_2);
-
-\end{tikzpicture}
+\includegraphics[scale=0.3]{pics/model_overview}
 \end{center}
 \end{frame}
-
 
 \begin{frame}
 \frametitle{Model: Input Layer}
